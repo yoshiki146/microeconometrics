@@ -1,0 +1,655 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\bcockx\Documents\Werk\UGent\onderwijs\Vakken\doctoraalSchool\slides\2014\lecture2\Stata\match-lectN.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Mar 2014, 10:29:29
+{txt}
+{com}. 
+. /**********************************************************************/
+. /** This file contains the code to compute PS matching estimates     **/
+. /**    and run the estimation procedure over the Monte-Carlo         **/
+. /**    datasets given the master data, selection mechanism,          **/
+. /**    information about policy regime (education subsidy available  **/
+. /**    or not) and the set of selected matching variables. Uses      **/
+. /**    Epanechnikov kernel weights and implemets the estimation      **/
+. /**    routines for both the ATT and ATNT. Routines in here are      **/
+. /**    called by the main program, matching.do.                      **/
+. /**                                                                  **/
+. /** Monica Costa Dias                                                **/
+. /** September 2008                                                   **/
+. /**********************************************************************/
+. 
+. 
+. 
+. *********************************************************************
+. ** PS matching estimation procedure: estimates ATT and ATNT over   **
+. **   the common support for p(X)                                   **
+. **                                                                 **
+. **   need to know: observed outcome (y)                            **
+. **   input as global: education status ($d)                        **
+. **                    matching variables ($matchX)                 **
+. *********************************************************************
+. 
+. /*MODIFIED by Bart Cockx 16/01/2012
+>         1. contains subsample of 2000 observations (no correlation case) with 
+>         subsidized advanced education and individuals totally aware of its 
+>         availability and eligibility rules at birth
+>         2. Replicates first Epanechnikov kernel matching of Blundel and 
+>         Dias (2009)
+>         3. Subsequently shows that this corresponds to routine developed by 
+>         Becker and Ichino (2002)
+> */
+. 
+. /* sample of data without correlation u and v*/
+. use C:\data\dataBlun_noc, clear
+{txt}
+{com}. 
+. global N=_N        /*Number of observations*/
+{txt}
+{com}. global h = 0.05      /* bandwidth  */
+{txt}
+{com}. global d = "d_eS"    /* choose treatment indicator: economy with or*/ 
+{txt}
+{com}. *without subsidized education 
+. 
+. *global matchX = "x"                    /* choose matching variables    */
+. *global matchX = "x z s_eS theta"
+. *global matchX = "z s_eS theta"
+. global matchX = "x theta"  /*These are the correct matching variables*/ 
+{txt}
+{com}. *for ATNT
+. *global matchX = "x z s_eS"
+. 
+. *global matchX = "x theta xt t2"
+. 
+. gen y = $d*ln(y1)+(1-$d)*ln(y0)            /* observed outcome  */
+{txt}
+{com}. 
+. 
+. *********************************************************************
+. ** PS matching estimation procedure: estimates ATT and ATNT over   **
+. **   the common support for p(X)                                   **
+. **                                                                 **
+. **   need to know: observed outcome (y)                            **
+. **   input as global: education status ($d)                        **
+. **                    matching variables ($matchX)                 **
+. *********************************************************************
+. 
+. 
+. cap program drop matching
+{txt}
+{com}. program define matching
+{txt}  1{com}. 
+.         qui probit $d $matchX
+{txt}  2{com}.         qui predict p, p
+{txt}  3{com}. 
+. 
+.         ** Estimating the ATT using PS matching **
+.         ******************************************
+. 
+.         qui gen group = $d /*setting group=1 to be the educated treated)*/
+{txt}  4{com}.                                                 
+.         qui Kernel1D  /* matching observations in group=0 to each */
+{txt}  5{com}.         *observation in group=1 
+. 
+.         qui sum y [iw=w] if group==0 /* mean outcome among the */ 
+{txt}  6{com}.         *non-treated matched to the treated and 
+.         local Ey0 = r(mean)   /*  weighted by the distribution of ps */
+{txt}  7{com}.         *among treated  
+.         qui sum y if group==1 & w~=0    /* mean outcome among the*/ 
+{txt}  8{com}.         *treated for whom at least one similar  
+.         local Ey1 = r(mean)         /*non-treated is found */
+{txt}  9{com}. 
+.         scalar matchATT = `Ey1'-`Ey0' /*PS matching estimate of */
+{txt} 10{com}.         *the ATT
+.         
+.         bys group:sum w         
+{txt} 11{com}. 
+.         
+.         ** Estimating the ATNT using PS matching **
+.         *******************************************
+. 
+.         qui replace group = 1-$d  /*setting group=1 to be the*/ 
+{txt} 12{com}.         *non-educated (non-treated) 
+.         qui Kernel1D   /* matching observations in group=0 to each*/ 
+{txt} 13{com}.         *observation in group=1 
+. 
+.         qui sum y [iw=w] if group==0   /* mean outcome among the*/ 
+{txt} 14{com}.         *treated matched to the non-treated and
+.         local Ey1 = r(mean)    /*   weighted by the distribution of*/ 
+{txt} 15{com}.         *ps among non-treated    
+.         qui sum y if group==1 & w~=0   /* mean outcome among the*/ 
+{txt} 16{com}.         *non-treated for whom at least one
+.         local Ey0 = r(mean)       /*   similar treated is found  */
+{txt} 17{com}. 
+.         scalar matchATNT = `Ey1'-`Ey0' /*PS matching estimate of the*/ 
+{txt} 18{com}.         *ATNT
+.         
+.         bys group:sum w 
+{txt} 19{com}. end
+{txt}
+{com}. 
+. 
+. 
+. *********************************************************************
+. ** 1 dimensional PS matching procedure using Epanechnikov kernel   **
+. **   weights with a constant bandwidth.                            **
+. **                                                                 **
+. **   need to know: propensity score (p)                            **
+. **                 observed outcome (y)                            **
+. **                 group to be matched (group)                     **
+. **   input as global: bandwidth ($h)                               **
+. **                    step to form grid in p ($step)               **
+. **                    total numbe of observations in dataset ($N)  **
+. *********************************************************************
+. 
+. cap program drop Kernel1D
+{txt}
+{com}. program define Kernel1D
+{txt}  1{com}. 
+.         ** generate working variables **
+.         ********************************
+.         cap qui drop w          
+{txt}  2{com}.         qui gen w    = 0  /* variable to contain matching weights for*/ 
+{txt}  3{com}.         *each observation in group=1 
+.         qui gen k    = .  /*variable to contain final kernel weights*/
+{txt}  4{com}.         qui gen dist = .  /*variable to contain standardised propensity*/ 
+{txt}  5{com}.         *score
+. 
+. 
+.         ** distribution of dummy variable group **
+.         ******************************************
+.         qui sort group
+{txt}  6{com}.         qui count if group==0  /* number of observations in group=0 */
+{txt}  7{com}.         local i1=r(N)+1       /* first observation in group=1 */
+{txt}  8{com}. 
+. 
+.         ** matching weights for both groups (0 and 1) **
+.         ************************************************
+.         forvalues i=`i1'/$N {c -(}  /* Matching each observation in group=1*/
+{txt}  9{com}. 
+.                 qui replace dist = abs(p-p[`i'])/$h if group==0 /*construct*/ 
+{txt} 10{com}.                 *standardized distance
+.                 qui replace k = (dist<1)*(1-dist^2)*3/4 if group==0 /*and*/ 
+{txt} 11{com}.                 *compute kernel weights among group=0 
+. 
+.                 qui sum k if group==0  /*check whether there is at least 1*/ 
+{txt} 12{com}.                 *matching observation 
+.                 if r(mean)==0 {c -(}         /*if not: matching weight is zero for*/ 
+{txt} 13{com}.                 *observation i
+.                         qui replace w = 0 if _n==`i'
+{txt} 14{com}.                 {c )-}
+{txt} 15{com}.                 else {c -(} /*if yes: positive weight for observation i and */
+{txt} 16{com}.                         qui replace w = w+ k/(r(mean)*r(N)) if group==0  
+{txt} 17{com}.                 *matching observations (note:w>1, since same obs 
+.                 *can be matched several times 
+.                         qui replace w = 1 if _n==`i'
+{txt} 18{com}.                 {c )-}
+{txt} 19{com}.         {c )-}
+{txt} 20{com}. 
+.       
+.         ** cleaning dataset **
+.         **********************
+.         qui drop dist k
+{txt} 21{com}. 
+. end
+{txt}
+{com}. 
+. *run the previously defined matching programs
+. matching
+
+{txt}{hline}
+-> group = 0
+
+    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 11}w {c |}{res}      1303    .5349194      1.0769   .0345909    10.8283
+
+{txt}{hline}
+-> group = 1
+
+    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 11}w {c |}{res}       697           1           0          1          1
+
+
+{txt}{hline}
+-> group = 0
+
+    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 11}w {c |}{res}       697    1.869441    3.301682   .0601002   18.04423
+
+{txt}{hline}
+-> group = 1
+
+    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 11}w {c |}{res}      1303           1           0          1          1
+
+{txt}
+{com}. 
+. * display the ATT
+. di matchATT 
+{res}.59606817
+{txt}
+{com}. *diplay the ATNT
+. di matchATNT
+{res}.37911964
+{txt}
+{com}. 
+. * Estimate ATT by procedure of Becker and Ichino
+. * Epanechnikov kernel matching
+. attk y $d $matchX, epan bwidth(.05) /*comsup pscore(p)*/ 
+
+
+{res} The program is searching for matches of each treated unit. 
+ This operation may take a while.
+
+
+
+{col 1}ATT estimation with the Kernel Matching method 
+
+{txt}{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}      697{col 13}     1303{col 25}    0.596{col 37}        .{col 49}        .
+
+{txt}{hline 57}
+Note: Analytical standard errors cannot be computed. Use
+the bootstrap option to get bootstrapped standard errors.
+
+{com}. *bootstrap 
+. 
+. * Epanechnikov kernel matching
+. * bootstrap 
+. *(do not specify pscore(p) if bootstrap,to account for *variability  p-score!)
+. * 1. with 50 replications in option
+. * disadvantage: cannot set seed => cannot replicate 
+. attk y $d $matchX, epan bwidth(.05) boot reps(400) dots
+
+
+{res} The program is searching for matches of each treated unit. 
+ This operation may take a while.
+
+
+
+{col 1}ATT estimation with the Kernel Matching method 
+
+{txt}{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}      697{col 13}     1303{col 25}    0.596{col 37}        .{col 49}        .
+
+{txt}{hline 57}
+Note: Analytical standard errors cannot be computed. Use
+the bootstrap option to get bootstrapped standard errors.
+
+
+
+
+
+Bootstrapping of standard errors 
+
+command:{col 15}attk y d_eS x theta , pscore() epan bwidth(.05)
+statistic:{col 15}attk{col 25} = r(attk)
+................................................................................................................................................................................................................................................................................................................................................................................................................
+
+
+Bootstrap statistics{col 51}Number of obs    ={res}      2000
+{txt}{col 51}Replications     ={res}       400
+
+{txt}{hline 13}{c TT}{hline 64}
+Variable     {c |}  Reps  Observed      Bias  Std. Err. [95% Conf. Interval]
+{hline 13}{c +}{hline 64}
+        attk {c |}{res}   400  .5960681 -.0022272  .0636007   .4710338   .7211025   {txt}(N)
+{col 13} {c |}{res}{col 53} .4601782   .7196432   {txt}(P)
+{col 13} {c |}{res}{col 53} .4628368   .7246091  {txt}(BC)
+{hline 13}{c BT}{hline 64}
+Note:{col 8}N   = normal
+{col 8}P   = percentile
+{col 8}BC  = bias-corrected
+
+
+
+{col 1}{res}ATT estimation with the Kernel Matching method
+{col 1}Bootstrapped standard errors
+
+{txt}{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}      697{col 13}     1303{col 25}    0.596{col 37}    0.064{col 49}    9.372
+
+{txt}{hline 57}
+
+{com}. * 2. In order to be able to replicate write 
+. bootstrap att=r(attk),reps(400) seed(123): attk y $d $matchX, epan bwidth(.05) 
+{txt}(running attk on estimation sample)
+
+{p 0 10 2} Warning:  Because {cmd:attk} is not an estimation command or does not set {cmd:e(sample)}, {cmd:bootstrap} has no way to determine which observations are used in calculating the statistics and so assumes that all observations are used.  This means that no observations will be excluded from the resampling because of missing values or other reasons.{p_end}
+
+{p 10 10 2} If the assumption is not true, press Break, save the data, and drop the observations that are to be excluded. 
+Be sure that the dataset in memory contains only the relevant data.{p_end}
+
+Bootstrap replications ({res}400{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+{res}
+{txt}Bootstrap results{col 49}Number of obs{col 68}= {res}     2000
+{txt}{col 49}Replications{col 68}= {res}      400
+{p2colset 7 17 21 2}{...}
+
+{txt}{p2col :command:}attk y d_eS x theta, epan bwidth(.05) {p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :att:}{res:r(attk)}{p_end}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}   Observed{col 26}   Bootstrap{col 54}         Norm{col 67}al-based
+{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}att {c |}{col 14}{res}{space 2} .5960682{col 26}{space 2} .0647912{col 37}{space 1}    9.20{col 46}{space 3}0.000{col 54}{space 4} .4690798{col 67}{space 3} .7230565
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. * Estimate ATNT by program of Becker and Ichino
+. *Redefine variables to get ATNT instead of AT
+. replace y = -y 
+{txt}(2000 real changes made)
+
+{com}. replace group = 1-$d  
+{txt}(0 real changes made)
+
+{com}. 
+. * Epanechnikov kernel matching
+. * bootstrap standard errors with 50 replications
+. attk y group $matchX, /*pscore(p)*/ epan bwidth(.05) /*comsup*/ 
+
+
+{res} The program is searching for matches of each treated unit. 
+ This operation may take a while.
+
+
+
+{col 1}ATT estimation with the Kernel Matching method 
+
+{txt}{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}     1303{col 13}      697{col 25}    0.379{col 37}        .{col 49}        .
+
+{txt}{hline 57}
+Note: Analytical standard errors cannot be computed. Use
+the bootstrap option to get bootstrapped standard errors.
+
+{com}. 
+. *Estimate ATT, ATNT and ATE by program of Leuven and Sianesi
+. *redefine orginal outcome and treatment 
+. replace y = -y 
+{txt}(2000 real changes made)
+
+{com}. psmatch2 $d $matchX, kernel outcome(y) kerneltype(epan) bwidth(.05) ate
+{res}
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}2{txt}){col 67}= {res}    726.91
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-929.57251{txt}{col 51}Pseudo R2{col 67}= {res}    0.2811
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2} .2505665{col 26}{space 2} .0680787{col 37}{space 1}    3.68{col 46}{space 3}0.000{col 54}{space 4} .1171347{col 67}{space 3} .3839982
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 4.323823{col 26}{space 2} .1870913{col 37}{space 1}   23.11{col 46}{space 3}0.000{col 54}{space 4} 3.957131{col 67}{space 3} 4.690516
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.769731{col 26}{space 2} .1129163{col 37}{space 1}  -24.53{col 46}{space 3}0.000{col 54}{space 4}-2.991043{col 67}{space 3}-2.548419
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33185043   .735782262   .596068171   .074879518     7.96
+{txt}{col 17}        ATU {c |}{res} .722169106   1.10128873   .379119622            .        .
+{txt}{col 17}        ATE {c |}{col 56}{res} .454726191            .        .
+{txt}{hline 28}{c +}{hline 59}
+{com}Note: S.E. does not take into account that the propensity score is estimated.
+
+           {txt}{c |} psmatch2:
+ psmatch2: {c |}   Common
+ Treatment {c |}  support
+assignment {c |} On suppor {c |}     Total
+{hline 11}{c +}{hline 11}{c +}{hline 10}
+ Untreated {c |}{res}     1,303 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}       697 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 11}{c +}{hline 10}
+     Total {c |}{res}     2,000 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. 
+. pstest $matchX, both   
+
+{txt}{hline 26}{c TT}{hline 34}{c TT}{hline 16}
+                Unmatched {c |}       Mean               %reduct {c |}     t-test
+Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t|
+{hline 26}{c +}{hline 34}{c +}{hline 16}
+x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002
+{txt}{col 24}M  {c |}{res} .44189    .3674     15.2    -5.8{txt} {c |}{res}   2.84  0.005
+{txt}{col 24}   {c |}                                  {c |}
+theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000
+{txt}{col 24}M  {c |}{res} .65759    .6592     -0.9    99.4{txt} {c |}{res}  -0.17  0.865
+{txt}{col 24}   {c |}                                  {c |}
+{hline 26}{c BT}{hline 34}{c BT}{hline 16}
+{hline 61}
+{col 10}Summary of the distribution of the abs(bias)
+{hline 61}
+
+                       BEFORE MATCHING
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} 14.36972       14.36972
+{txt} 5%    {res} 14.36972       141.4903
+{txt}10%    {res} 14.36972              .       {txt}Obs         {res}          2
+{txt}25%    {res} 14.36972              .       {txt}Sum of Wgt. {res}          2
+
+{txt}50%    {res} 77.93001                      {txt}Mean          {res} 77.93001
+                        {txt}Largest       Std. Dev.     {res} 89.88782
+{txt}75%    {res} 141.4903              .
+{txt}90%    {res} 141.4903              .       {txt}Variance      {res}  8079.82
+{txt}95%    {res} 141.4903       14.36972       {txt}Skewness      {res}        0
+{txt}99%    {res} 141.4903       141.4903       {txt}Kurtosis      {res}        1
+{txt}{hline 61}
+
+                       AFTER MATCHING
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}  .895249        .895249
+{txt} 5%    {res}  .895249       15.19664
+{txt}10%    {res}  .895249              .       {txt}Obs         {res}          2
+{txt}25%    {res}  .895249              .       {txt}Sum of Wgt. {res}          2
+
+{txt}50%    {res} 8.045943                      {txt}Mean          {res} 8.045943
+                        {txt}Largest       Std. Dev.     {res} 10.11261
+{txt}75%    {res} 15.19664              .
+{txt}90%    {res} 15.19664              .       {txt}Variance      {res} 102.2649
+{txt}95%    {res} 15.19664        .895249       {txt}Skewness      {res}        0
+{txt}99%    {res} 15.19664       15.19664       {txt}Kurtosis      {res}        1
+{txt}{hline 61}
+
+{hline 9}{c TT}{hline 55}
+ Sample  {c |} Pseudo R2    LR chi2    p>chi2    MeanBias    MedBias
+{hline 9}{c +}{hline 55}
+ Raw     {c |}{res}    0.281      726.91    0.000       77.9       77.9
+{txt} Matched {c |}{res}    0.004        8.06    0.018        8.0        8.0
+{txt}{hline 9}{c BT}{hline 55}
+
+{com}. 
+. psgraph
+{res}{txt}
+{com}. 
+. *calculate bootstrapped standard errors
+. bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(400) seed(123): /// 
+> psmatch2 $d $matchX, kernel outcome(y) kerneltype(epan) bwidth(.05) ate
+{txt}(running psmatch2 on estimation sample)
+{com}Note: S.E. does not take into account that the propensity score is estimated.
+
+{txt}Bootstrap replications ({res}400{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+{res}
+{txt}Bootstrap results{col 49}Number of obs{col 68}= {res}     2000
+{txt}{col 49}Replications{col 68}= {res}      400
+{p2colset 7 17 21 2}{...}
+
+{txt}{p2col :command:}psmatch2 d_eS x theta, kernel outcome(y) kerneltype(epan) bwidth(.05) ate {p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :att:}{res:r(att)}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :atu:}{res:r(atu)}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ate:}{res:r(ate)}{p_end}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}   Observed{col 26}   Bootstrap{col 54}         Norm{col 67}al-based
+{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}att {c |}{col 14}{res}{space 2} .5960682{col 26}{space 2} .0647912{col 37}{space 1}    9.20{col 46}{space 3}0.000{col 54}{space 4} .4690798{col 67}{space 3} .7230565
+{txt}{space 9}atu {c |}{col 14}{res}{space 2} .3791196{col 26}{space 2} .0917332{col 37}{space 1}    4.13{col 46}{space 3}0.000{col 54}{space 4} .1993258{col 67}{space 3} .5589134
+{txt}{space 9}ate {c |}{col 14}{res}{space 2} .4547262{col 26}{space 2} .0710231{col 37}{space 1}    6.40{col 46}{space 3}0.000{col 54}{space 4} .3155235{col 67}{space 3} .5939289
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. * Two ways of imposing COMMON SUPPORT:
+. * option common:  imposes a common support by dropping treatment observations 
+. * whose pscore is higher than the maximum or less than the minimum pscore of the
+. * controls.
+.  
+. * option trim(integer): imposes common support by dropping # percent of the 
+. * treatment (control observations in case atu) observations at which the pscore 
+. * density of the control observations is the lowest
+. 
+. * Note: alternatives discussed in lecture are not readily programmed
+. * Example: option common
+. 
+. * Note: The program still estimates ps on full dataset. With other common 
+. * support rules (e;g. Huber et al (2013), one may want to re-estimate ps 
+. * on common support and re-apply common support rule   
+. psmatch2 $d $matchX, kernel outcome(y) kerneltype(epan) bwidth(.05) ///
+> common ate
+{res}
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}2{txt}){col 67}= {res}    726.91
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-929.57251{txt}{col 51}Pseudo R2{col 67}= {res}    0.2811
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2} .2505665{col 26}{space 2} .0680787{col 37}{space 1}    3.68{col 46}{space 3}0.000{col 54}{space 4} .1171347{col 67}{space 3} .3839982
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 4.323823{col 26}{space 2} .1870913{col 37}{space 1}   23.11{col 46}{space 3}0.000{col 54}{space 4} 3.957131{col 67}{space 3} 4.690516
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.769731{col 26}{space 2} .1129163{col 37}{space 1}  -24.53{col 46}{space 3}0.000{col 54}{space 4}-2.991043{col 67}{space 3}-2.548419
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33219815   .737468248   .594729903   .074915321     7.94
+{txt}{col 17}        ATU {c |}{res} .733409712   1.11125578   .377846063            .        .
+{txt}{col 17}        ATE {c |}{col 56}{res} .456180859            .        .
+{txt}{hline 28}{c +}{hline 59}
+{com}Note: S.E. does not take into account that the propensity score is estimated.
+
+ {txt}psmatch2: {c |}   psmatch2: Common
+ Treatment {c |}        support
+assignment {c |} Off suppo  On suppor {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+ Untreated {c |}{res}        72      1,231 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}         1        696 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}        73      1,927 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. 
+. psgraph
+{res}{txt}
+{com}. 
+. pstest $matchX, both   
+
+{txt}{hline 26}{c TT}{hline 34}{c TT}{hline 16}
+                Unmatched {c |}       Mean               %reduct {c |}     t-test
+Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t|
+{hline 26}{c +}{hline 34}{c +}{hline 16}
+x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002
+{txt}{col 24}M  {c |}{res} .44109   .36713     15.1    -5.0{txt} {c |}{res}   2.82  0.005
+{txt}{col 24}   {c |}                                  {c |}
+theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000
+{txt}{col 24}M  {c |}{res} .65711   .65932     -1.2    99.1{txt} {c |}{res}  -0.24  0.814
+{txt}{col 24}   {c |}                                  {c |}
+{hline 26}{c BT}{hline 34}{c BT}{hline 16}
+{hline 61}
+{col 10}Summary of the distribution of the abs(bias)
+{hline 61}
+
+                       BEFORE MATCHING
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} 14.36972       14.36972
+{txt} 5%    {res} 14.36972       141.4903
+{txt}10%    {res} 14.36972              .       {txt}Obs         {res}          2
+{txt}25%    {res} 14.36972              .       {txt}Sum of Wgt. {res}          2
+
+{txt}50%    {res} 77.93001                      {txt}Mean          {res} 77.93001
+                        {txt}Largest       Std. Dev.     {res} 89.88782
+{txt}75%    {res} 141.4903              .
+{txt}90%    {res} 141.4903              .       {txt}Variance      {res}  8079.82
+{txt}95%    {res} 141.4903       14.36972       {txt}Skewness      {res}        0
+{txt}99%    {res} 141.4903       141.4903       {txt}Kurtosis      {res}        1
+{txt}{hline 61}
+
+                       AFTER MATCHING
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} 1.235226       1.235226
+{txt} 5%    {res} 1.235226       15.08841
+{txt}10%    {res} 1.235226              .       {txt}Obs         {res}          2
+{txt}25%    {res} 1.235226              .       {txt}Sum of Wgt. {res}          2
+
+{txt}50%    {res} 8.161816                      {txt}Mean          {res} 8.161816
+                        {txt}Largest       Std. Dev.     {res} 9.795678
+{txt}75%    {res} 15.08841              .
+{txt}90%    {res} 15.08841              .       {txt}Variance      {res}  95.9553
+{txt}95%    {res} 15.08841       1.235226       {txt}Skewness      {res}        0
+{txt}99%    {res} 15.08841       15.08841       {txt}Kurtosis      {res}        1
+{txt}{hline 61}
+
+{hline 9}{c TT}{hline 55}
+ Sample  {c |} Pseudo R2    LR chi2    p>chi2    MeanBias    MedBias
+{hline 9}{c +}{hline 55}
+ Raw     {c |}{res}    0.281      726.91    0.000       77.9       77.9
+{txt} Matched {c |}{res}    0.004        7.92    0.019        8.2        8.2
+{txt}{hline 9}{c BT}{hline 55}
+
+{com}. 
+. * Both programs implement a variety of alternative matching estimators
+. * Becker Ichino's program implements Deheija and Wahba (2002)'s procedure
+. 
+. 
+. 
+{txt}end of do-file
+
+{com}. exit, clear

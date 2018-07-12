@@ -1,0 +1,2642 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/home2/177e605e/Documents/microeconometrics/ex1/exercise1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}12 Jul 2018, 14:46:23
+{txt}
+{com}. 
+. 
+. ********************* Prob 1 ************************
+. *** 1-a ***
+. 
+. use "/home2/177e605e/Documents/microeconometrics/ex1/dataBlun_noc.dta", clear
+{txt}
+{com}. 
+. global N=_N        /*Number of observations*/ 
+{txt}
+{com}. global h = 0.05      /* bandwidth  */
+{txt}
+{com}. global d = "d_eS"    /* choose treatment indicator: economy with or*/ 
+{txt}
+{com}. 
+. // use quates (") to refer to text
+. *without subsidized education 
+. 
+. global matchX = "x theta"  /*These are the correct matching variables*/ 
+{txt}
+{com}.  
+. 
+. gen y = $d*ln(y1)+(1-$d)*ln(y0)            /* observed outcome  */
+{txt}
+{com}. 
+. pscore $d $matchX, pscore(ps) detail
+
+
+
+{res}**************************************************** 
+Algorithm to estimate the propensity score 
+**************************************************** 
+
+
+The treatment is d_eS
+
+        {txt}education {c |}
+     attainment - {c |}
+ expected subsidy {c |}      Freq.     Percent        Cum.
+{hline 18}{c +}{hline 35}
+no high education {c |}{res}      1,303       65.15       65.15
+{txt}   high education {c |}{res}        697       34.85      100.00
+{txt}{hline 18}{c +}{hline 35}
+            Total {c |}{res}      2,000      100.00
+
+
+
+Estimation of the propensity score 
+
+{txt}Iteration 0:   log likelihood = {res}-1293.0263
+{txt}Iteration 1:   log likelihood = {res}-949.40505
+{txt}Iteration 2:   log likelihood = {res}-929.84212
+{txt}Iteration 3:   log likelihood = {res}-929.57258
+{txt}Iteration 4:   log likelihood = {res}-929.57251
+
+{txt}Probit regression                                 Number of obs   = {res}      2000
+                                                  {txt}LR chi2({res}2{txt})      = {res}    726.91
+                                                  {txt}Prob > chi2     = {res}    0.0000
+{txt}Log likelihood = {res}-929.57251                       {txt}Pseudo R2       = {res}    0.2811
+
+{txt}{hline 13}{c TT}{hline 64}
+        d_eS {c |}      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+{hline 13}{c +}{hline 64}
+           x {c |}  {res} .2505665   .0680787     3.68   0.000     .1171347    .3839982
+       {txt}theta {c |}  {res} 4.323823   .1870913    23.11   0.000     3.957131    4.690516
+       {txt}_cons {c |}  {res}-2.769731   .1129163   -24.53   0.000    -2.991043   -2.548419
+{txt}{hline 13}{c BT}{hline 64}
+
+
+
+{res}Description of the estimated propensity score 
+
+                 {txt}Estimated propensity score
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} .0056593       .0028806
+{txt} 5%    {res} .0170007       .0030394
+{txt}10%    {res} .0346989       .0030471       {txt}Obs         {res}       2000
+{txt}25%    {res}  .109664       .0031188       {txt}Sum of Wgt. {res}       2000
+
+{txt}50%    {res} .2836471                      {txt}Mean          {res} .3495899
+                        {txt}Largest       Std. Dev.     {res} .2713848
+{txt}75%    {res}  .566432        .955243
+{txt}90%    {res} .7661133       .9558381       {txt}Variance      {res} .0736497
+{txt}95%    {res} .8541194       .9586234       {txt}Skewness      {res} .5314459
+{txt}99%    {res} .9220377       .9636999       {txt}Kurtosis      {res} 2.060968
+
+
+
+****************************************************** 
+Step 1: Identification of the optimal number of blocks 
+Use option detail if you want more detailed output 
+****************************************************** 
+
+
+
+Distribution of treated and controls across blocks
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       712         64 {txt}{c |}{res}       776 
+{txt}         2 {c |}{res}       325        122 {txt}{c |}{res}       447 
+{txt}         3 {c |}{res}       165        167 {txt}{c |}{res}       332 
+{txt}         4 {c |}{res}        81        200 {txt}{c |}{res}       281 
+{txt}         5 {c |}{res}        20        144 {txt}{c |}{res}       164 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test that the mean propensity score is not different for treated and controls
+
+
+
+Test in block 1
+
+Observations in block 1
+ obs: 776,  control: 712,  treated: 64
+
+
+Test for block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    712{col 22} .0844651{col 34} .0021497{col 46} .0573604{col 58} .0802447{col 70} .0886856
+{txt}high edu {c |}{res}{col 12}     64{col 22} .1057032{col 34} .0070408{col 46} .0563263{col 58} .0916334{col 70} .1197731
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    776{col 22} .0862167{col 34} .0020655{col 46} .0575377{col 58} .0821621{col 70} .0902713
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0212381{col 34} .0074745{col 58}-.0359108{col 70}-.0065655
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.8414
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     774
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0023         {txt}Pr(|T| > |t|) = {res}0.0046          {txt}Pr(T > t) = {res}0.9977
+
+
+
+The mean propensity score is different for
+treated and controls in block 1
+Split the block 1 and retest
+
+
+Check that blocks have shifted 
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       712         64 {txt}{c |}{res}       776 
+{txt}         3 {c |}{res}       325        122 {txt}{c |}{res}       447 
+{txt}         4 {c |}{res}       165        167 {txt}{c |}{res}       332 
+{txt}         5 {c |}{res}        81        200 {txt}{c |}{res}       281 
+{txt}         6 {c |}{res}        20        144 {txt}{c |}{res}       164 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test in block 1
+
+Observations in block 1
+ obs: 466,  control: 435,  treated: 31
+
+
+Test for block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    435{col 22} .0447667{col 34} .0013736{col 46} .0286496{col 58} .0420668{col 70} .0474665
+{txt}high edu {c |}{res}{col 12}     31{col 22} .0555614{col 34} .0048072{col 46} .0267652{col 58} .0457438{col 70} .0653789
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    466{col 22} .0454848{col 34} .0013262{col 46} .0286278{col 58} .0428788{col 70} .0480908
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0107947{col 34} .0053039{col 58}-.0212173{col 70}-.0003721
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.0353
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     464
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0212         {txt}Pr(|T| > |t|) = {res}0.0424          {txt}Pr(T > t) = {res}0.9788
+
+
+The mean propensity score is not different for
+treated and controls in block 1
+
+
+
+Test in block 2
+
+Observations in block 2
+ obs: 310,  control: 277,  treated: 33
+
+
+Test for block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    277{col 22} .1468075{col 34} .0017002{col 46} .0282964{col 58} .1434605{col 70} .1501544
+{txt}high edu {c |}{res}{col 12}     33{col 22} .1528062{col 34} .0050778{col 46}   .02917{col 58}  .142463{col 70} .1631494
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    310{col 22} .1474461{col 34} .0016132{col 46}  .028403{col 58} .1442719{col 70} .1506203
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0059987{col 34} .0052279{col 58}-.0162856{col 70} .0042882
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.1474
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     308
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1260         {txt}Pr(|T| > |t|) = {res}0.2521          {txt}Pr(T > t) = {res}0.8740
+
+
+The mean propensity score is not different for
+treated and controls in block 2
+
+
+
+Test in block 3
+
+Observations in block 3
+ obs: 447,  control: 325,  treated: 122
+
+
+Test for block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    325{col 22} .2820443{col 34} .0031781{col 46} .0572932{col 58} .2757921{col 70} .2882965
+{txt}high edu {c |}{res}{col 12}    122{col 22} .3052155{col 34} .0049992{col 46} .0552178{col 58} .2953183{col 70} .3151127
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    447{col 22} .2883684{col 34} .0027247{col 46} .0576071{col 58} .2830136{col 70} .2937233
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0231712{col 34} .0060241{col 58}-.0350105{col 70}-.0113319
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -3.8464
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     445
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0001         {txt}Pr(|T| > |t|) = {res}0.0001          {txt}Pr(T > t) = {res}0.9999
+
+
+
+The mean propensity score is different for
+treated and controls in block 3
+Split the block 3 and retest
+
+
+Check that blocks have shifted 
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       435         31 {txt}{c |}{res}       466 
+{txt}         2 {c |}{res}       277         33 {txt}{c |}{res}       310 
+{txt}         3 {c |}{res}       325        122 {txt}{c |}{res}       447 
+{txt}         5 {c |}{res}       165        167 {txt}{c |}{res}       332 
+{txt}         6 {c |}{res}        81        200 {txt}{c |}{res}       281 
+{txt}         7 {c |}{res}        20        144 {txt}{c |}{res}       164 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test in block 3
+
+Observations in block 3
+ obs: 267,  control: 211,  treated: 56
+
+
+Test for block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    211{col 22}  .246164{col 34} .0020455{col 46} .0297121{col 58} .2421318{col 70} .2501963
+{txt}high edu {c |}{res}{col 12}     56{col 22} .2540829{col 34} .0038614{col 46} .0288964{col 58} .2463443{col 70} .2618214
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    267{col 22} .2478249{col 34} .0018155{col 46} .0296655{col 58} .2442503{col 70} .2513995
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0079188{col 34} .0044412{col 58}-.0166633{col 70} .0008257
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.7830
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     265
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0379         {txt}Pr(|T| > |t|) = {res}0.0757          {txt}Pr(T > t) = {res}0.9621
+
+
+The mean propensity score is not different for
+treated and controls in block 3
+
+
+
+Test in block 4
+
+Observations in block 4
+ obs: 180,  control: 114,  treated: 66
+
+
+Test for block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    114{col 22} .3484543{col 34} .0028377{col 46}  .030298{col 58} .3428324{col 70} .3540762
+{txt}high edu {c |}{res}{col 12}     66{col 22} .3486008{col 34} .0034935{col 46} .0283816{col 58} .3416238{col 70} .3555779
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22}  .348508{col 34}  .002201{col 46} .0295298{col 58} .3441647{col 70} .3528513
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0001465{col 34} .0045802{col 58}-.0091851{col 70}  .008892
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.0320
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.4873         {txt}Pr(|T| > |t|) = {res}0.9745          {txt}Pr(T > t) = {res}0.5127
+
+
+The mean propensity score is not different for
+treated and controls in block 4
+
+
+
+Test in block 5
+
+Observations in block 5
+ obs: 332,  control: 165,  treated: 167
+
+
+Test for block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    165{col 22}  .489325{col 34}  .004513{col 46}  .057971{col 58} .4804138{col 70} .4982361
+{txt}high edu {c |}{res}{col 12}    167{col 22} .5053894{col 34} .0045144{col 46} .0583384{col 58} .4964765{col 70} .5143024
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    332{col 22} .4974056{col 34} .0032173{col 46} .0586227{col 58} .4910766{col 70} .5037346
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0160644{col 34} .0063836{col 58}-.0286221{col 70}-.0035068
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.5165
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     330
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0062         {txt}Pr(|T| > |t|) = {res}0.0123          {txt}Pr(T > t) = {res}0.9938
+
+
+The mean propensity score is not different for
+treated and controls in block 5
+
+
+
+Test in block 6
+
+Observations in block 6
+ obs: 281,  control: 81,  treated: 200
+
+
+Test for block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     81{col 22} .6812734{col 34} .0056492{col 46}  .050843{col 58} .6700311{col 70} .6925157
+{txt}high edu {c |}{res}{col 12}    200{col 22} .7012924{col 34} .0039078{col 46} .0552643{col 58} .6935865{col 70} .7089984
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    281{col 22} .6955218{col 34} .0032629{col 46} .0546966{col 58} .6890988{col 70} .7019448
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} -.020019{col 34} .0071164{col 58}-.0340276{col 70}-.0060104
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.8131
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     279
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0026         {txt}Pr(|T| > |t|) = {res}0.0053          {txt}Pr(T > t) = {res}0.9974
+
+
+
+The mean propensity score is different for
+treated and controls in block 6
+Split the block 6 and retest
+
+
+Check that blocks have shifted 
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       435         31 {txt}{c |}{res}       466 
+{txt}         2 {c |}{res}       277         33 {txt}{c |}{res}       310 
+{txt}         3 {c |}{res}       211         56 {txt}{c |}{res}       267 
+{txt}         4 {c |}{res}       114         66 {txt}{c |}{res}       180 
+{txt}         5 {c |}{res}       165        167 {txt}{c |}{res}       332 
+{txt}         6 {c |}{res}        81        200 {txt}{c |}{res}       281 
+{txt}         8 {c |}{res}        20        144 {txt}{c |}{res}       164 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test in block 6
+
+Observations in block 6
+ obs: 147,  control: 53,  treated: 94
+
+
+Test for block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     53{col 22} .6502727{col 34} .0037229{col 46} .0271034{col 58} .6428021{col 70} .6577433
+{txt}high edu {c |}{res}{col 12}     94{col 22} .6511287{col 34} .0028477{col 46} .0276098{col 58} .6454737{col 70} .6567837
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    147{col 22} .6508201{col 34} .0022548{col 46} .0273383{col 58} .6463638{col 70} .6552764
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} -.000856{col 34} .0047116{col 58}-.0101683{col 70} .0084564
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.1817
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     145
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.4280         {txt}Pr(|T| > |t|) = {res}0.8561          {txt}Pr(T > t) = {res}0.5720
+
+
+The mean propensity score is not different for
+treated and controls in block 6
+
+
+
+Test in block 7
+
+Observations in block 7
+ obs: 134,  control: 28,  treated: 106
+
+
+Test for block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     28{col 22} .7399533{col 34} .0053022{col 46} .0280564{col 58} .7290742{col 70} .7508324
+{txt}high edu {c |}{res}{col 12}    106{col 22} .7457772{col 34} .0028527{col 46} .0293706{col 58} .7401208{col 70} .7514337
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    134{col 22} .7445603{col 34} .0025134{col 46} .0290942{col 58}  .739589{col 70} .7495316
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0058239{col 34} .0061846{col 58}-.0180577{col 70} .0064098
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.9417
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     132
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1740         {txt}Pr(|T| > |t|) = {res}0.3481          {txt}Pr(T > t) = {res}0.8260
+
+
+The mean propensity score is not different for
+treated and controls in block 7
+
+
+
+Test in block 8
+
+Observations in block 8
+ obs: 164,  control: 20,  treated: 144
+
+
+Test for block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     20{col 22} .8622664{col 34} .0092336{col 46} .0412937{col 58} .8429403{col 70} .8815925
+{txt}high edu {c |}{res}{col 12}    144{col 22} .8718697{col 34} .0034973{col 46} .0419677{col 58} .8649566{col 70} .8787828
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    164{col 22} .8706985{col 34} .0032702{col 46} .0418793{col 58} .8642411{col 70}  .877156
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0096033{col 34}  .009996{col 58}-.0293426{col 70}  .010136
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.9607
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     162
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1691         {txt}Pr(|T| > |t|) = {res}0.3381          {txt}Pr(T > t) = {res}0.8309
+
+
+The mean propensity score is not different for
+treated and controls in block 8
+
+
+{txt}The final number of blocks is 8
+
+This number of blocks ensures that the mean propensity score
+is not different for treated and controls in each blocks
+
+
+
+{res}********************************************************** 
+Step 2: Test of balancing property of the propensity score 
+Use option detail if you want more detailed output 
+********************************************************** 
+
+
+
+**************************************************** 
+Testing the balancing property in block 1
+**************************************************** 
+ obs: 466,  control: 435,  treated: 31
+
+
+
+Testing the balancing property for variable x in block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    435{col 22} .3195402{col 34}  .022383{col 46} .4668354{col 58} .2755476{col 70} .3635329
+{txt}high edu {c |}{res}{col 12}     31{col 22} .3225806{col 34} .0853468{col 46}  .475191{col 58} .1482792{col 70} .4968821
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    466{col 22} .3197425{col 34} .0216277{col 46} .4668779{col 58} .2772424{col 70} .3622426
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0030404{col 34} .0868836{col 58}-.1737745{col 70} .1676936
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.0350
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     464
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.4860         {txt}Pr(|T| > |t|) = {res}0.9721          {txt}Pr(T > t) = {res}0.5140
+
+Variable x is  balanced  in block 1
+
+
+
+Testing the balancing property for variable theta in block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    435{col 22} .2036634{col 34} .0043082{col 46}  .089855{col 58} .1951958{col 70} .2121309
+{txt}high edu {c |}{res}{col 12}     31{col 22}  .240725{col 34} .0116143{col 46} .0646658{col 58} .2170054{col 70} .2644446
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    466{col 22} .2061288{col 34}  .004115{col 46} .0888309{col 58} .1980425{col 70} .2142152
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0370616{col 34} .0164412{col 58}-.0693701{col 70}-.0047531
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.2542
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     464
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0123         {txt}Pr(|T| > |t|) = {res}0.0247          {txt}Pr(T > t) = {res}0.9877
+
+Variable theta is  balanced  in block 1
+
+
+
+**************************************************** 
+Testing the balancing property in block 2
+**************************************************** 
+ obs: 310,  control: 277,  treated: 33
+
+
+
+Testing the balancing property for variable x in block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    277{col 22} .3646209{col 34} .0289723{col 46} .4821949{col 58} .3075862{col 70} .4216557
+{txt}high edu {c |}{res}{col 12}     33{col 22} .3636364{col 34} .0850377{col 46} .4885042{col 58} .1904203{col 70} .5368524
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    310{col 22} .3645161{col 34} .0273799{col 46} .4820724{col 58} .3106416{col 70} .4183907
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0009846{col 34} .0889201{col 58}-.1739832{col 70} .1759523
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.0111
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     308
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.5044         {txt}Pr(|T| > |t|) = {res}0.9912          {txt}Pr(T > t) = {res}0.4956
+
+Variable x is  balanced  in block 2
+
+
+
+Testing the balancing property for variable theta in block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    277{col 22} .3746682{col 34} .0023024{col 46} .0383201{col 58} .3701356{col 70} .3792007
+{txt}high edu {c |}{res}{col 12}     33{col 22} .3807636{col 34} .0073377{col 46} .0421518{col 58} .3658172{col 70} .3957099
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    310{col 22}  .375317{col 34} .0021991{col 46} .0387189{col 58}   .37099{col 70} .3796441
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0060954{col 34} .0071334{col 58}-.0201318{col 70}  .007941
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.8545
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     308
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1967         {txt}Pr(|T| > |t|) = {res}0.3935          {txt}Pr(T > t) = {res}0.8033
+
+Variable theta is  balanced  in block 2
+
+
+
+**************************************************** 
+Testing the balancing property in block 3
+**************************************************** 
+ obs: 267,  control: 211,  treated: 56
+
+
+
+Testing the balancing property for variable x in block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    211{col 22} .4407583{col 34} .0342602{col 46} .4976587{col 58} .3732202{col 70} .5082964
+{txt}high edu {c |}{res}{col 12}     56{col 22} .3571429{col 34} .0646096{col 46} .4834938{col 58} .2276624{col 70} .4866233
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    267{col 22}  .423221{col 34} .0302934{col 46} .4949976{col 58} .3635757{col 70} .4828663
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0836154{col 34} .0743718{col 58}-.0628193{col 70} .2300502
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  1.1243
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     265
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.8690         {txt}Pr(|T| > |t|) = {res}0.2619          {txt}Pr(T > t) = {res}0.1310
+
+Variable x is  balanced  in block 3
+
+
+
+Testing the balancing property for variable theta in block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    211{col 22} .4555319{col 34} .0024016{col 46} .0348851{col 58} .4507976{col 70} .4602662
+{txt}high edu {c |}{res}{col 12}     56{col 22} .4662102{col 34} .0046384{col 46} .0347108{col 58} .4569146{col 70} .4755058
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    267{col 22} .4577715{col 34} .0021453{col 46}  .035055{col 58} .4535475{col 70} .4619955
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0106783{col 34} .0052385{col 58}-.0209928{col 70}-.0003639
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.0384
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     265
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0213         {txt}Pr(|T| > |t|) = {res}0.0425          {txt}Pr(T > t) = {res}0.9787
+
+Variable theta is  balanced  in block 3
+
+
+
+**************************************************** 
+Testing the balancing property in block 4
+**************************************************** 
+ obs: 180,  control: 114,  treated: 66
+
+
+
+Testing the balancing property for variable x in block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    114{col 22} .3684211{col 34} .0453782{col 46} .4845061{col 58} .2785187{col 70} .4583234
+{txt}high edu {c |}{res}{col 12}     66{col 22} .3636364{col 34} .0596664{col 46} .4847319{col 58} .2444744{col 70} .4827983
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .3666667{col 34} .0360185{col 46} .4832386{col 58} .2955912{col 70} .4377421
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0047847{col 34} .0749523{col 58}-.1431248{col 70} .1526941
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.0638
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.5254         {txt}Pr(|T| > |t|) = {res}0.9492          {txt}Pr(T > t) = {res}0.4746
+
+Variable x is  balanced  in block 4
+
+
+
+Testing the balancing property for variable theta in block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    114{col 22}  .528843{col 34} .0030047{col 46} .0320813{col 58} .5228901{col 70} .5347958
+{txt}high edu {c |}{res}{col 12}     66{col 22} .5292483{col 34} .0044905{col 46} .0364813{col 58} .5202801{col 70} .5382165
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .5289916{col 34} .0025089{col 46} .0336607{col 58} .5240407{col 70} .5339425
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0004053{col 34} .0052209{col 58}-.0107082{col 70} .0098975
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.0776
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.4691         {txt}Pr(|T| > |t|) = {res}0.9382          {txt}Pr(T > t) = {res}0.5309
+
+Variable theta is  balanced  in block 4
+
+
+
+**************************************************** 
+Testing the balancing property in block 5
+**************************************************** 
+ obs: 332,  control: 165,  treated: 167
+
+
+
+Testing the balancing property for variable x in block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    165{col 22} .4484848{col 34} .0388357{col 46} .4988531{col 58} .3718025{col 70} .5251672
+{txt}high edu {c |}{res}{col 12}    167{col 22} .4311377{col 34} .0384377{col 46} .4967247{col 58} .3552479{col 70} .5070275
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    332{col 22}  .439759{col 34} .0272823{col 46}  .497107{col 58} .3860905{col 70} .4934276
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0173471{col 34} .0546398{col 58}-.0901392{col 70} .1248334
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.3175
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     330
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.6245         {txt}Pr(|T| > |t|) = {res}0.7511          {txt}Pr(T > t) = {res}0.3755
+
+Variable x is  balanced  in block 5
+
+
+
+Testing the balancing property for variable theta in block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    165{col 22}  .608356{col 34} .0033593{col 46} .0431513{col 58} .6017229{col 70} .6149891
+{txt}high edu {c |}{res}{col 12}    167{col 22} .6187322{col 34}  .003167{col 46} .0409268{col 58} .6124794{col 70}  .624985
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    332{col 22} .6135753{col 34} .0023217{col 46} .0423038{col 58} .6090081{col 70} .6181425
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0103762{col 34} .0046153{col 58}-.0194554{col 70} -.001297
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.2482
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     330
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0126         {txt}Pr(|T| > |t|) = {res}0.0252          {txt}Pr(T > t) = {res}0.9874
+
+Variable theta is  balanced  in block 5
+
+
+
+**************************************************** 
+Testing the balancing property in block 6
+**************************************************** 
+ obs: 147,  control: 53,  treated: 94
+
+
+
+Testing the balancing property for variable x in block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     53{col 22} .3773585{col 34} .0672194{col 46} .4893644{col 58}  .242473{col 70}  .512244
+{txt}high edu {c |}{res}{col 12}     94{col 22} .3404255{col 34} .0491362{col 46} .4763931{col 58} .2428508{col 70} .4380003
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    147{col 22} .3537415{col 34} .0395703{col 46} .4797648{col 58} .2755368{col 70} .4319462
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}  .036933{col 34} .0826378{col 58}-.1263973{col 70} .2002632
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.4469
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     145
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.6722         {txt}Pr(|T| > |t|) = {res}0.6556          {txt}Pr(T > t) = {res}0.3278
+
+Variable x is  balanced  in block 6
+
+
+
+Testing the balancing property for variable theta in block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     53{col 22}   .70823{col 34}  .004818{col 46} .0350754{col 58}  .698562{col 70}  .717898
+{txt}high edu {c |}{res}{col 12}     94{col 22} .7109138{col 34} .0033429{col 46} .0324106{col 58} .7042755{col 70} .7175522
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    147{col 22} .7099462{col 34} .0027466{col 46} .0333013{col 58} .7045179{col 70} .7153745
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0026838{col 34} .0057356{col 58}-.0140201{col 70} .0086524
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.4679
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     145
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.3203         {txt}Pr(|T| > |t|) = {res}0.6405          {txt}Pr(T > t) = {res}0.6797
+
+Variable theta is  balanced  in block 6
+
+
+
+**************************************************** 
+Testing the balancing property in block 7
+**************************************************** 
+ obs: 134,  control: 28,  treated: 106
+
+
+
+Testing the balancing property for variable x in block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     28{col 22} .3571429{col 34} .0922139{col 46}   .48795{col 58} .1679356{col 70} .5463501
+{txt}high edu {c |}{res}{col 12}    106{col 22}  .490566{col 34} .0487863{col 46} .5022859{col 58} .3938318{col 70} .5873003
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    134{col 22} .4626866{col 34} .0432346{col 46} .5004767{col 58} .3771702{col 70} .5482029
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.1334232{col 34} .1061103{col 58}-.3433199{col 70} .0764736
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.2574
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     132
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1054         {txt}Pr(|T| > |t|) = {res}0.2108          {txt}Pr(T > t) = {res}0.8946
+
+Variable x is  balanced  in block 7
+
+
+
+Testing the balancing property for variable theta in block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     28{col 22}  .769203{col 34} .0070785{col 46} .0374559{col 58} .7546792{col 70} .7837269
+{txt}high edu {c |}{res}{col 12}    106{col 22} .7657269{col 34} .0035897{col 46} .0369582{col 58} .7586092{col 70} .7728446
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    134{col 22} .7664533{col 34} .0031918{col 46} .0369482{col 58} .7601399{col 70} .7727666
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0034761{col 34} .0078747{col 58}-.0121007{col 70}  .019053
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.4414
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     132
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.6702         {txt}Pr(|T| > |t|) = {res}0.6596          {txt}Pr(T > t) = {res}0.3298
+
+Variable theta is  balanced  in block 7
+
+
+
+**************************************************** 
+Testing the balancing property in block 8
+**************************************************** 
+ obs: 164,  control: 20,  treated: 144
+
+
+
+Testing the balancing property for variable x in block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     20{col 22}      .25{col 34} .0993399{col 46} .4442617{col 58} .0420791{col 70} .4579209
+{txt}high edu {c |}{res}{col 12}    144{col 22} .5972222{col 34} .0410141{col 46} .4921687{col 58} .5161501{col 70} .6782944
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    164{col 22}  .554878{col 34} .0389264{col 46} .4985014{col 58}  .478013{col 70} .6317431
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.3472222{col 34} .1161638{col 58}-.5766128{col 70}-.1178317
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.9891
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     162
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0016         {txt}Pr(|T| > |t|) = {res}0.0032          {txt}Pr(T > t) = {res}0.9984
+
+Variable x is not balanced in block 8
+
+
+
+Testing the balancing property for variable theta in block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     20{col 22} .8837818{col 34} .0108448{col 46} .0484995{col 58} .8610833{col 70} .9064802
+{txt}high edu {c |}{res}{col 12}    144{col 22} .8746958{col 34} .0043785{col 46}  .052542{col 58} .8660409{col 70} .8833508
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    164{col 22} .8758039{col 34} .0040613{col 46} .0520097{col 58} .8677844{col 70} .8838234
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}  .009086{col 34} .0124289{col 58}-.0154575{col 70} .0336294
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.7310
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     162
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.7671         {txt}Pr(|T| > |t|) = {res}0.4658          {txt}Pr(T > t) = {res}0.2329
+
+Variable theta is  balanced  in block 8
+
+{err}The balancing property is not satisfied 
+
+Try a different specification of the propensity score 
+
+  {txt}Inferior {c |} education attainment
+  of block {c |}  - expected subsidy
+of pscore  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         0 {c |}{res}       435         31 {txt}{c |}{res}       466 
+{txt}        .1 {c |}{res}       277         33 {txt}{c |}{res}       310 
+{txt}        .2 {c |}{res}       211         56 {txt}{c |}{res}       267 
+{txt}        .3 {c |}{res}       114         66 {txt}{c |}{res}       180 
+{txt}        .4 {c |}{res}       165        167 {txt}{c |}{res}       332 
+{txt}        .6 {c |}{res}        53         94 {txt}{c |}{res}       147 
+{txt}        .7 {c |}{res}        28        106 {txt}{c |}{res}       134 
+{txt}        .8 {c |}{res}        20        144 {txt}{c |}{res}       164 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+******************************************* 
+End of the algorithm to estimate the pscore 
+******************************************* 
+{txt}
+{com}. 
+. *** 1-b ***
+. gen thetaSq = theta^2
+{txt}
+{com}. gen thetaX = theta*x 
+{txt}
+{com}. 
+. global matchX2 = "x theta thetaSq thetaX" 
+{txt}
+{com}. 
+. pscore $d $matchX2, pscore(ps2) blockid(blc2) detail 
+
+
+
+{res}**************************************************** 
+Algorithm to estimate the propensity score 
+**************************************************** 
+
+
+The treatment is d_eS
+
+        {txt}education {c |}
+     attainment - {c |}
+ expected subsidy {c |}      Freq.     Percent        Cum.
+{hline 18}{c +}{hline 35}
+no high education {c |}{res}      1,303       65.15       65.15
+{txt}   high education {c |}{res}        697       34.85      100.00
+{txt}{hline 18}{c +}{hline 35}
+            Total {c |}{res}      2,000      100.00
+
+
+
+Estimation of the propensity score 
+
+{txt}Iteration 0:   log likelihood = {res}-1293.0263
+{txt}Iteration 1:   log likelihood = {res}-942.77087
+{txt}Iteration 2:   log likelihood = {res}-925.97097
+{txt}Iteration 3:   log likelihood = {res}-925.65042
+{txt}Iteration 4:   log likelihood = {res}-925.64994
+
+{txt}Probit regression                                 Number of obs   = {res}      2000
+                                                  {txt}LR chi2({res}4{txt})      = {res}    734.75
+                                                  {txt}Prob > chi2     = {res}    0.0000
+{txt}Log likelihood = {res}-925.64994                       {txt}Pseudo R2       = {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 64}
+        d_eS {c |}      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+{hline 13}{c +}{hline 64}
+           x {c |}  {res}-.2348704   .2179395    -1.08   0.281    -.6620239    .1922831
+       {txt}theta {c |}  {res} 2.544221   .8871383     2.87   0.004     .8054624    4.282981
+     {txt}thetaSq {c |}  {res} 1.344717   .8037943     1.67   0.094    -.2306911    2.920125
+      {txt}thetaX {c |}  {res} .9116079   .3883733     2.35   0.019     .1504103    1.672806
+       {txt}_cons {c |}  {res}-2.240901   .2408422    -9.30   0.000    -2.712943   -1.768859
+{txt}{hline 13}{c BT}{hline 64}
+
+
+
+{res}Description of the estimated propensity score 
+
+                 {txt}Estimated propensity score
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} .0130349       .0074363
+{txt} 5%    {res} .0265484       .0076314
+{txt}10%    {res} .0469422       .0078329       {txt}Obs         {res}       2000
+{txt}25%    {res} .1138968       .0078372       {txt}Sum of Wgt. {res}       2000
+
+{txt}50%    {res} .2657103                      {txt}Mean          {res} .3483056
+                        {txt}Largest       Std. Dev.     {res} .2745203
+{txt}75%    {res} .5591377       .9851458
+{txt}90%    {res} .7860141       .9854774       {txt}Variance      {res} .0753614
+{txt}95%    {res} .8802079       .9869936       {txt}Skewness      {res} .6571694
+{txt}99%    {res} .9580365       .9895982       {txt}Kurtosis      {res} 2.236363
+
+
+
+****************************************************** 
+Step 1: Identification of the optimal number of blocks 
+Use option detail if you want more detailed output 
+****************************************************** 
+
+
+
+Distribution of treated and controls across blocks
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       737         68 {txt}{c |}{res}       805 
+{txt}         2 {c |}{res}       319        132 {txt}{c |}{res}       451 
+{txt}         3 {c |}{res}       147        160 {txt}{c |}{res}       307 
+{txt}         4 {c |}{res}        81        178 {txt}{c |}{res}       259 
+{txt}         5 {c |}{res}        19        159 {txt}{c |}{res}       178 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test that the mean propensity score is not different for treated and controls
+
+
+
+Test in block 1
+
+Observations in block 1
+ obs: 805,  control: 737,  treated: 68
+
+
+Test for block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    737{col 22} .0922886{col 34} .0020089{col 46} .0545384{col 58} .0883447{col 70} .0962326
+{txt}high edu {c |}{res}{col 12}     68{col 22} .1126035{col 34} .0064288{col 46} .0530132{col 58} .0997715{col 70} .1254354
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    805{col 22} .0940047{col 34} .0019269{col 46} .0546719{col 58} .0902222{col 70} .0977871
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0203148{col 34} .0068962{col 58}-.0338516{col 70}-.0067781
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.9458
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     803
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0017         {txt}Pr(|T| > |t|) = {res}0.0033          {txt}Pr(T > t) = {res}0.9983
+
+
+
+The mean propensity score is different for
+treated and controls in block 1
+Split the block 1 and retest
+
+
+Check that blocks have shifted 
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       737         68 {txt}{c |}{res}       805 
+{txt}         3 {c |}{res}       319        132 {txt}{c |}{res}       451 
+{txt}         4 {c |}{res}       147        160 {txt}{c |}{res}       307 
+{txt}         5 {c |}{res}        81        178 {txt}{c |}{res}       259 
+{txt}         6 {c |}{res}        19        159 {txt}{c |}{res}       178 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test in block 1
+
+Observations in block 1
+ obs: 449,  control: 421,  treated: 28
+
+
+Test for block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    421{col 22} .0512329{col 34} .0012717{col 46} .0260922{col 58} .0487333{col 70} .0537325
+{txt}high edu {c |}{res}{col 12}     28{col 22} .0587592{col 34} .0040571{col 46} .0214681{col 58} .0504347{col 70} .0670837
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    449{col 22} .0517023{col 34}  .001221{col 46} .0258718{col 58} .0493027{col 70} .0541018
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0075263{col 34} .0050424{col 58} -.017436{col 70} .0023834
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.4926
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     447
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0681         {txt}Pr(|T| > |t|) = {res}0.1362          {txt}Pr(T > t) = {res}0.9319
+
+
+The mean propensity score is not different for
+treated and controls in block 1
+
+
+
+Test in block 2
+
+Observations in block 2
+ obs: 356,  control: 316,  treated: 40
+
+
+Test for block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    316{col 22} .1469862{col 34} .0015791{col 46} .0280703{col 58} .1438794{col 70} .1500931
+{txt}high edu {c |}{res}{col 12}     40{col 22} .1502945{col 34} .0049258{col 46} .0311534{col 58} .1403311{col 70} .1602578
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    356{col 22} .1473579{col 34} .0015055{col 46} .0284056{col 58} .1443971{col 70} .1503187
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0033082{col 34} .0047706{col 58}-.0126905{col 70} .0060741
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.6935
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     354
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.2442         {txt}Pr(|T| > |t|) = {res}0.4885          {txt}Pr(T > t) = {res}0.7558
+
+
+The mean propensity score is not different for
+treated and controls in block 2
+
+
+
+Test in block 3
+
+Observations in block 3
+ obs: 451,  control: 319,  treated: 132
+
+
+Test for block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    319{col 22} .2806885{col 34} .0032458{col 46}  .057971{col 58} .2743026{col 70} .2870743
+{txt}high edu {c |}{res}{col 12}    132{col 22} .3035254{col 34} .0048707{col 46} .0559597{col 58} .2938901{col 70} .3131607
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    451{col 22} .2873724{col 34} .0027435{col 46} .0582638{col 58} .2819807{col 70} .2927642
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0228369{col 34} .0059395{col 58}-.0345097{col 70}-.0111642
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -3.8449
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     449
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0001         {txt}Pr(|T| > |t|) = {res}0.0001          {txt}Pr(T > t) = {res}0.9999
+
+
+
+The mean propensity score is different for
+treated and controls in block 3
+Split the block 3 and retest
+
+
+Check that blocks have shifted 
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       421         28 {txt}{c |}{res}       449 
+{txt}         2 {c |}{res}       316         40 {txt}{c |}{res}       356 
+{txt}         3 {c |}{res}       319        132 {txt}{c |}{res}       451 
+{txt}         5 {c |}{res}       147        160 {txt}{c |}{res}       307 
+{txt}         6 {c |}{res}        81        178 {txt}{c |}{res}       259 
+{txt}         7 {c |}{res}        19        159 {txt}{c |}{res}       178 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test in block 3
+
+Observations in block 3
+ obs: 271,  control: 207,  treated: 64
+
+
+Test for block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    207{col 22} .2439005{col 34} .0020005{col 46} .0287825{col 58} .2399564{col 70} .2478446
+{txt}high edu {c |}{res}{col 12}     64{col 22} .2540676{col 34} .0034824{col 46} .0278596{col 58} .2471085{col 70} .2610267
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    271{col 22} .2463016{col 34}  .001752{col 46} .0288423{col 58} .2428522{col 70}  .249751
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0101671{col 34} .0040861{col 58}-.0182118{col 70}-.0021224
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.4882
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     269
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0067         {txt}Pr(|T| > |t|) = {res}0.0134          {txt}Pr(T > t) = {res}0.9933
+
+
+The mean propensity score is not different for
+treated and controls in block 3
+
+
+
+Test in block 4
+
+Observations in block 4
+ obs: 180,  control: 112,  treated: 68
+
+
+Test for block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    112{col 22} .3486805{col 34} .0028378{col 46} .0300326{col 58} .3430571{col 70} .3543038
+{txt}high edu {c |}{res}{col 12}     68{col 22} .3500739{col 34} .0035506{col 46} .0292794{col 58} .3429868{col 70}  .357161
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .3492069{col 34} .0022119{col 46} .0296758{col 58} .3448421{col 70} .3535716
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0013935{col 34} .0045738{col 58}-.0104193{col 70} .0076324
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.3047
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.3805         {txt}Pr(|T| > |t|) = {res}0.7610          {txt}Pr(T > t) = {res}0.6195
+
+
+The mean propensity score is not different for
+treated and controls in block 4
+
+
+
+Test in block 5
+
+Observations in block 5
+ obs: 307,  control: 147,  treated: 160
+
+
+Test for block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    147{col 22} .4871039{col 34} .0048619{col 46} .0589479{col 58}  .477495{col 70} .4967127
+{txt}high edu {c |}{res}{col 12}    160{col 22} .5053085{col 34} .0047431{col 46}  .059996{col 58} .4959409{col 70} .5146761
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    307{col 22} .4965916{col 34} .0034297{col 46} .0600937{col 58} .4898428{col 70} .5033404
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0182046{col 34} .0067974{col 58}-.0315803{col 70}-.0048289
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.6782
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     305
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0039         {txt}Pr(|T| > |t|) = {res}0.0078          {txt}Pr(T > t) = {res}0.9961
+
+
+
+The mean propensity score is different for
+treated and controls in block 5
+Split the block 5 and retest
+
+
+Check that blocks have shifted 
+
+ {txt}Blocks of {c |}
+the pscore {c |}
+       for {c |} education attainment
+ treatment {c |}  - expected subsidy
+     d_eS  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         1 {c |}{res}       421         28 {txt}{c |}{res}       449 
+{txt}         2 {c |}{res}       316         40 {txt}{c |}{res}       356 
+{txt}         3 {c |}{res}       207         64 {txt}{c |}{res}       271 
+{txt}         4 {c |}{res}       112         68 {txt}{c |}{res}       180 
+{txt}         5 {c |}{res}       147        160 {txt}{c |}{res}       307 
+{txt}         7 {c |}{res}        81        178 {txt}{c |}{res}       259 
+{txt}         8 {c |}{res}        19        159 {txt}{c |}{res}       178 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+
+Test in block 5
+
+Observations in block 5
+ obs: 161,  control: 85,  treated: 76
+
+
+Test for block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     85{col 22} .4436029{col 34} .0031782{col 46} .0293013{col 58} .4372827{col 70}  .449923
+{txt}high edu {c |}{res}{col 12}     76{col 22} .4505886{col 34} .0034418{col 46} .0300048{col 58} .4437323{col 70}  .457445
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    161{col 22} .4469005{col 34} .0023445{col 46} .0297489{col 58} .4422703{col 70} .4515307
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0069858{col 34} .0046785{col 58}-.0162257{col 70} .0022542
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.4932
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     159
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0687         {txt}Pr(|T| > |t|) = {res}0.1374          {txt}Pr(T > t) = {res}0.9313
+
+
+The mean propensity score is not different for
+treated and controls in block 5
+
+
+
+Test in block 6
+
+Observations in block 6
+ obs: 146,  control: 62,  treated: 84
+
+
+Test for block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     62{col 22} .5467423{col 34} .0037731{col 46} .0297096{col 58} .5391975{col 70} .5542872
+{txt}high edu {c |}{res}{col 12}     84{col 22} .5548169{col 34}  .003199{col 46} .0293191{col 58} .5484543{col 70} .5611795
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    146{col 22}  .551388{col 34} .0024543{col 46}  .029655{col 58} .5465372{col 70} .5562387
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0080746{col 34} .0049368{col 58}-.0178325{col 70} .0016834
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.6356
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     144
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0521         {txt}Pr(|T| > |t|) = {res}0.1041          {txt}Pr(T > t) = {res}0.9479
+
+
+The mean propensity score is not different for
+treated and controls in block 6
+
+
+
+Test in block 7
+
+Observations in block 7
+ obs: 259,  control: 81,  treated: 178
+
+
+Test for block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     81{col 22} .6834882{col 34} .0064518{col 46} .0580658{col 58} .6706488{col 70} .6963276
+{txt}high edu {c |}{res}{col 12}    178{col 22} .7016176{col 34} .0043979{col 46} .0586758{col 58} .6929385{col 70} .7102968
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    259{col 22} .6959478{col 34} .0036647{col 46} .0589775{col 58} .6887313{col 70} .7031643
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0181294{col 34} .0078389{col 58}-.0335661{col 70}-.0026928
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.3128
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     257
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0108         {txt}Pr(|T| > |t|) = {res}0.0215          {txt}Pr(T > t) = {res}0.9892
+
+
+The mean propensity score is not different for
+treated and controls in block 7
+
+
+
+Test in block 8
+
+Observations in block 8
+ obs: 178,  control: 19,  treated: 159
+
+
+Test for block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     19{col 22} .8806667{col 34} .0105043{col 46} .0457872{col 58}  .858598{col 70} .9027355
+{txt}high edu {c |}{res}{col 12}    159{col 22} .8924255{col 34} .0041472{col 46} .0522939{col 58} .8842344{col 70} .9006165
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    178{col 22} .8911703{col 34} .0038712{col 46} .0516485{col 58} .8835307{col 70}   .89881
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0117588{col 34} .0125412{col 58}-.0365093{col 70} .0129918
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.9376
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     176
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1749         {txt}Pr(|T| > |t|) = {res}0.3497          {txt}Pr(T > t) = {res}0.8251
+
+
+The mean propensity score is not different for
+treated and controls in block 8
+
+
+{txt}The final number of blocks is 8
+
+This number of blocks ensures that the mean propensity score
+is not different for treated and controls in each blocks
+
+
+
+{res}********************************************************** 
+Step 2: Test of balancing property of the propensity score 
+Use option detail if you want more detailed output 
+********************************************************** 
+
+
+
+**************************************************** 
+Testing the balancing property in block 1
+**************************************************** 
+ obs: 449,  control: 421,  treated: 28
+
+
+
+Testing the balancing property for variable x in block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    421{col 22}  .368171{col 34} .0235342{col 46}  .482882{col 58} .3219115{col 70} .4144306
+{txt}high edu {c |}{res}{col 12}     28{col 22} .3928571{col 34} .0939898{col 46} .4973475{col 58} .2000059{col 70} .5857084
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    449{col 22} .3697105{col 34} .0228067{col 46} .4832647{col 58} .3248891{col 70} .4145318
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0246861{col 34} .0944148{col 58}-.2102382{col 70}  .160866
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.2615
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     447
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.3969         {txt}Pr(|T| > |t|) = {res}0.7939          {txt}Pr(T > t) = {res}0.6031
+
+Variable x is  balanced  in block 1
+
+
+
+Testing the balancing property for variable theta in block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    421{col 22} .1978462{col 34} .0041952{col 46} .0860788{col 58}    .1896{col 70} .2060925
+{txt}high edu {c |}{res}{col 12}     28{col 22} .2292106{col 34} .0108342{col 46} .0573293{col 58} .2069806{col 70} .2514406
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    449{col 22} .1998021{col 34} .0040051{col 46} .0848657{col 58} .1919311{col 70} .2076732
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0313644{col 34} .0165149{col 58}-.0638208{col 70} .0010921
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.8992
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     447
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0291         {txt}Pr(|T| > |t|) = {res}0.0582          {txt}Pr(T > t) = {res}0.9709
+
+Variable theta is  balanced  in block 1
+
+
+
+Testing the balancing property for variable thetaSq in block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    421{col 22} .0465351{col 34} .0014989{col 46} .0307539{col 58} .0435889{col 70} .0494813
+{txt}high edu {c |}{res}{col 12}     28{col 22} .0557068{col 34} .0047486{col 46} .0251273{col 58} .0459634{col 70} .0654501
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    449{col 22} .0471071{col 34} .0014389{col 46} .0304905{col 58} .0442792{col 70}  .049935
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0091717{col 34} .0059415{col 58}-.0208485{col 70} .0025051
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.5437
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     447
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0617         {txt}Pr(|T| > |t|) = {res}0.1234          {txt}Pr(T > t) = {res}0.9383
+
+Variable thetaSq is  balanced  in block 1
+
+
+
+Testing the balancing property for variable thetaX in block 1
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    421{col 22} .0708967{col 34} .0051464{col 46} .1055955{col 58} .0607808{col 70} .0810127
+{txt}high edu {c |}{res}{col 12}     28{col 22} .0883767{col 34} .0221255{col 46} .1170769{col 58} .0429791{col 70} .1337744
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    449{col 22} .0719868{col 34} .0050161{col 46} .1062897{col 58} .0621288{col 70} .0818449
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}  -.01748{col 34} .0207508{col 58}-.0582613{col 70} .0233013
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.8424
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     447
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.2000         {txt}Pr(|T| > |t|) = {res}0.4000          {txt}Pr(T > t) = {res}0.8000
+
+Variable thetaX is  balanced  in block 1
+
+
+
+**************************************************** 
+Testing the balancing property in block 2
+**************************************************** 
+ obs: 356,  control: 316,  treated: 40
+
+
+
+Testing the balancing property for variable x in block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    316{col 22} .3481013{col 34} .0268403{col 46} .4771239{col 58} .2952923{col 70} .4009102
+{txt}high edu {c |}{res}{col 12}     40{col 22}     .375{col 34} .0775217{col 46} .4902903{col 58} .2181975{col 70} .5318025
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    356{col 22} .3511236{col 34} .0253336{col 46} .4779933{col 58} .3013008{col 70} .4009464
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0268987{col 34} .0803188{col 58}-.1848607{col 70} .1310632
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.3349
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     354
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.3689         {txt}Pr(|T| > |t|) = {res}0.7379          {txt}Pr(T > t) = {res}0.6311
+
+Variable x is  balanced  in block 2
+
+
+
+Testing the balancing property for variable theta in block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    316{col 22} .3767051{col 34} .0019232{col 46} .0341879{col 58} .3729211{col 70}  .380489
+{txt}high edu {c |}{res}{col 12}     40{col 22} .3797611{col 34} .0061644{col 46}  .038987{col 58} .3672925{col 70} .3922297
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    356{col 22} .3770484{col 34} .0018398{col 46} .0347136{col 58} .3734301{col 70} .3806668
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} -.003056{col 34} .0058317{col 58}-.0145252{col 70} .0084131
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.5240
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     354
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.3003         {txt}Pr(|T| > |t|) = {res}0.6006          {txt}Pr(T > t) = {res}0.6997
+
+Variable theta is  balanced  in block 2
+
+
+
+Testing the balancing property for variable thetaSq in block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    316{col 22} .1430718{col 34} .0014564{col 46} .0258903{col 58} .1402062{col 70} .1459374
+{txt}high edu {c |}{res}{col 12}     40{col 22} .1457005{col 34}  .004698{col 46} .0297126{col 58} .1361979{col 70}  .155203
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    356{col 22} .1433672{col 34} .0013947{col 46} .0263147{col 58} .1406243{col 70}   .14611
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0026287{col 34} .0044202{col 58}-.0113219{col 70} .0060646
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.5947
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     354
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.2762         {txt}Pr(|T| > |t|) = {res}0.5524          {txt}Pr(T > t) = {res}0.7238
+
+Variable thetaSq is  balanced  in block 2
+
+
+
+Testing the balancing property for variable thetaX in block 2
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    316{col 22} .1256045{col 34} .0097297{col 46} .1729583{col 58} .1064612{col 70} .1447479
+{txt}high edu {c |}{res}{col 12}     40{col 22}  .134286{col 34} .0279138{col 46} .1765422{col 58} .0778251{col 70}  .190747
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    356{col 22}   .12658{col 34} .0091761{col 46} .1731342{col 58} .1085336{col 70} .1446263
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0086815{col 34} .0290933{col 58}-.0658989{col 70} .0485358
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.2984
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     354
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.3828         {txt}Pr(|T| > |t|) = {res}0.7656          {txt}Pr(T > t) = {res}0.6172
+
+Variable thetaX is  balanced  in block 2
+
+
+
+**************************************************** 
+Testing the balancing property in block 3
+**************************************************** 
+ obs: 271,  control: 207,  treated: 64
+
+
+
+Testing the balancing property for variable x in block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    207{col 22} .3719807{col 34} .0336754{col 46}  .484505{col 58}  .305588{col 70} .4383733
+{txt}high edu {c |}{res}{col 12}     64{col 22}   .34375{col 34} .0598392{col 46} .4787136{col 58} .2241709{col 70} .4633291
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    271{col 22} .3653137{col 34} .0293043{col 46} .4824089{col 58} .3076198{col 70} .4230075
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0282307{col 34} .0691028{col 58}-.1078205{col 70} .1642818
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.4085
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     269
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.6584         {txt}Pr(|T| > |t|) = {res}0.6832          {txt}Pr(T > t) = {res}0.3416
+
+Variable x is  balanced  in block 3
+
+
+
+Testing the balancing property for variable theta in block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    207{col 22} .4670064{col 34} .0021792{col 46} .0313537{col 58}   .46271{col 70} .4713029
+{txt}high edu {c |}{res}{col 12}     64{col 22} .4761741{col 34} .0038721{col 46} .0309765{col 58} .4684364{col 70} .4839118
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    271{col 22} .4691715{col 34} .0019105{col 46} .0314507{col 58} .4654101{col 70} .4729328
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0091676{col 34} .0044718{col 58}-.0179717{col 70}-.0003635
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.0501
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     269
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0207         {txt}Pr(|T| > |t|) = {res}0.0413          {txt}Pr(T > t) = {res}0.9793
+
+Variable theta is  balanced  in block 3
+
+
+
+Testing the balancing property for variable thetaSq in block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    207{col 22} .2190733{col 34} .0020493{col 46} .0294836{col 58} .2150331{col 70} .2231135
+{txt}high edu {c |}{res}{col 12}     64{col 22} .2276863{col 34} .0036914{col 46} .0295316{col 58} .2203095{col 70} .2350631
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    271{col 22} .2211074{col 34} .0018022{col 46} .0296674{col 58} .2175593{col 70} .2246555
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} -.008613{col 34} .0042185{col 58}-.0169184{col 70}-.0003076
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.0417
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     269
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0211         {txt}Pr(|T| > |t|) = {res}0.0422          {txt}Pr(T > t) = {res}0.9789
+
+Variable thetaSq is  balanced  in block 3
+
+
+
+Testing the balancing property for variable thetaX in block 3
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    207{col 22} .1632445{col 34} .0147981{col 46} .2129069{col 58} .1340695{col 70} .1924196
+{txt}high edu {c |}{res}{col 12}     64{col 22} .1532745{col 34} .0267087{col 46} .2136698{col 58} .0999013{col 70} .2066476
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    271{col 22}   .16089{col 34} .0129226{col 46} .2127332{col 58} .1354481{col 70} .1863319
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0099701{col 34} .0304764{col 58}-.0500326{col 70} .0699727
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.3271
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     269
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.6281         {txt}Pr(|T| > |t|) = {res}0.7438          {txt}Pr(T > t) = {res}0.3719
+
+Variable thetaX is  balanced  in block 3
+
+
+
+**************************************************** 
+Testing the balancing property in block 4
+**************************************************** 
+ obs: 180,  control: 112,  treated: 68
+
+
+
+Testing the balancing property for variable x in block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    112{col 22} .3571429{col 34} .0454796{col 46}  .481311{col 58}  .267022{col 70} .4472637
+{txt}high edu {c |}{res}{col 12}     68{col 22} .3088235{col 34} .0564433{col 46} .4654432{col 58} .1961623{col 70} .4214848
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .3388889{col 34} .0353785{col 46} .4746523{col 58} .2690763{col 70} .4087015
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0483193{col 34} .0730857{col 58}-.0959066{col 70} .1925452
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.6611
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.7453         {txt}Pr(|T| > |t|) = {res}0.5094          {txt}Pr(T > t) = {res}0.2547
+
+Variable x is  balanced  in block 4
+
+
+
+Testing the balancing property for variable theta in block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    112{col 22} .5406069{col 34} .0030252{col 46} .0320155{col 58} .5346123{col 70} .5466015
+{txt}high edu {c |}{res}{col 12}     68{col 22} .5447406{col 34} .0043232{col 46} .0356498{col 58} .5361115{col 70} .5533697
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .5421685{col 34} .0024893{col 46} .0333969{col 58} .5372564{col 70} .5470806
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0041337{col 34} .0051393{col 58}-.0142756{col 70} .0060082
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.8043
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.2111         {txt}Pr(|T| > |t|) = {res}0.4223          {txt}Pr(T > t) = {res}0.7889
+
+Variable theta is  balanced  in block 4
+
+
+
+Testing the balancing property for variable thetaSq in block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    112{col 22} .2932716{col 34} .0032606{col 46} .0345065{col 58} .2868106{col 70} .2997326
+{txt}high edu {c |}{res}{col 12}     68{col 22} .2979945{col 34} .0046368{col 46} .0382361{col 58} .2887394{col 70} .3072496
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .2950558{col 34}  .002678{col 46} .0359287{col 58} .2897714{col 70} .3003403
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0047229{col 34} .0055277{col 58}-.0156311{col 70} .0061853
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.8544
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1970         {txt}Pr(|T| > |t|) = {res}0.3940          {txt}Pr(T > t) = {res}0.8030
+
+Variable thetaSq is  balanced  in block 4
+
+
+
+Testing the balancing property for variable thetaX in block 4
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}    112{col 22} .1808069{col 34} .0230422{col 46} .2438558{col 58} .1351472{col 70} .2264666
+{txt}high edu {c |}{res}{col 12}     68{col 22} .1540857{col 34} .0281851{col 46} .2324206{col 58} .0978279{col 70} .2103435
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    180{col 22} .1707122{col 34} .0178362{col 46} .2392982{col 58} .1355159{col 70} .2059086
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0267212{col 34} .0368373{col 58}-.0459728{col 70} .0994152
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.7254
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     178
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.7654         {txt}Pr(|T| > |t|) = {res}0.4692          {txt}Pr(T > t) = {res}0.2346
+
+Variable thetaX is  balanced  in block 4
+
+
+
+**************************************************** 
+Testing the balancing property in block 5
+**************************************************** 
+ obs: 161,  control: 85,  treated: 76
+
+
+
+Testing the balancing property for variable x in block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     85{col 22} .3882353{col 34} .0531741{col 46} .4902409{col 58} .2824928{col 70} .4939778
+{txt}high edu {c |}{res}{col 12}     76{col 22} .3157895{col 34} .0536739{col 46} .4679181{col 58} .2088656{col 70} .4227133
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    161{col 22} .3540373{col 34} .0378067{col 46} .4797126{col 58} .2793728{col 70} .4287017
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0724458{col 34} .0757519{col 58} -.077164{col 70} .2220556
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.9564
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     159
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.8298         {txt}Pr(|T| > |t|) = {res}0.3403          {txt}Pr(T > t) = {res}0.1702
+
+Variable x is  balanced  in block 5
+
+
+
+Testing the balancing property for variable theta in block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     85{col 22} .5953307{col 34} .0038235{col 46} .0352509{col 58} .5877273{col 70} .6029342
+{txt}high edu {c |}{res}{col 12}     76{col 22} .6042583{col 34}  .004176{col 46} .0364058{col 58} .5959392{col 70} .6125774
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    161{col 22}  .599545{col 34} .0028346{col 46} .0359672{col 58} .5939469{col 70}  .605143
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0089276{col 34} .0056518{col 58}-.0200897{col 70} .0022346
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.5796
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     159
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0581         {txt}Pr(|T| > |t|) = {res}0.1162          {txt}Pr(T > t) = {res}0.9419
+
+Variable theta is  balanced  in block 5
+
+
+
+Testing the balancing property for variable thetaSq in block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     85{col 22} .3556467{col 34} .0045298{col 46} .0417629{col 58} .3466386{col 70} .3646547
+{txt}high edu {c |}{res}{col 12}     76{col 22}  .366436{col 34} .0049746{col 46} .0433674{col 58} .3565261{col 70} .3763459
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    161{col 22} .3607398{col 34} .0033682{col 46} .0427371{col 58}  .354088{col 70} .3673915
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0107893{col 34} .0067137{col 58}-.0240489{col 70} .0024703
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.6071
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     159
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0550         {txt}Pr(|T| > |t|) = {res}0.1100          {txt}Pr(T > t) = {res}0.9450
+
+Variable thetaSq is  balanced  in block 5
+
+
+
+Testing the balancing property for variable thetaX in block 5
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     85{col 22} .2160733{col 34} .0296105{col 46} .2729957{col 58} .1571895{col 70} .2749571
+{txt}high edu {c |}{res}{col 12}     76{col 22} .1759757{col 34} .0299272{col 46} .2608995{col 58} .1163577{col 70} .2355938
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    161{col 22} .1971453{col 34} .0210644{col 46} .2672767{col 58} .1555452{col 70} .2387453
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0400975{col 34} .0422075{col 58}-.0432622{col 70} .1234573
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.9500
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     159
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.8282         {txt}Pr(|T| > |t|) = {res}0.3435          {txt}Pr(T > t) = {res}0.1718
+
+Variable thetaX is  balanced  in block 5
+
+
+
+**************************************************** 
+Testing the balancing property in block 6
+**************************************************** 
+ obs: 146,  control: 62,  treated: 84
+
+
+
+Testing the balancing property for variable x in block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     62{col 22}  .516129{col 34} .0639851{col 46} .5038194{col 58} .3881829{col 70} .6440752
+{txt}high edu {c |}{res}{col 12}     84{col 22} .4642857{col 34} .0547419{col 46} .5017182{col 58} .3554062{col 70} .5731652
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    146{col 22} .4863014{col 34} .0415072{col 46} .5015328{col 58} .4042642{col 70} .5683386
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0518433{col 34} .0841534{col 58}-.1144921{col 70} .2181788
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.6161
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     144
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.7306         {txt}Pr(|T| > |t|) = {res}0.5388          {txt}Pr(T > t) = {res}0.2694
+
+Variable x is  balanced  in block 6
+
+
+
+Testing the balancing property for variable theta in block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     62{col 22} .6428765{col 34} .0048952{col 46} .0385452{col 58} .6330879{col 70} .6526652
+{txt}high edu {c |}{res}{col 12}     84{col 22}  .651236{col 34} .0044253{col 46} .0405583{col 58} .6424344{col 70} .6600377
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    146{col 22} .6476861{col 34} .0032937{col 46} .0397974{col 58} .6411763{col 70} .6541959
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0083595{col 34} .0066501{col 58}-.0215039{col 70} .0047849
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.2571
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     144
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1054         {txt}Pr(|T| > |t|) = {res}0.2108          {txt}Pr(T > t) = {res}0.8946
+
+Variable theta is  balanced  in block 6
+
+
+
+Testing the balancing property for variable thetaSq in block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     62{col 22}  .414752{col 34} .0063062{col 46} .0496552{col 58} .4021419{col 70} .4273621
+{txt}high edu {c |}{res}{col 12}     84{col 22} .4257338{col 34} .0057561{col 46} .0527555{col 58} .4142851{col 70} .4371824
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    146{col 22} .4210703{col 34} .0042684{col 46} .0515756{col 58} .4126339{col 70} .4295067
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0109818{col 34} .0086169{col 58}-.0280138{col 70} .0060502
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -1.2744
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     144
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1023         {txt}Pr(|T| > |t|) = {res}0.2046          {txt}Pr(T > t) = {res}0.8977
+
+Variable thetaSq is  balanced  in block 6
+
+
+
+Testing the balancing property for variable thetaX in block 6
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     62{col 22} .3143396{col 34} .0389953{col 46} .3070494{col 58} .2363637{col 70} .3923155
+{txt}high edu {c |}{res}{col 12}     84{col 22} .2838635{col 34} .0334862{col 46} .3069059{col 58} .2172608{col 70} .3504661
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    146{col 22} .2968054{col 34} .0253479{col 46} .3062796{col 58} .2467063{col 70} .3469044
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0304761{col 34} .0513963{col 58}-.0711126{col 70} .1320649
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.5930
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     144
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.7229         {txt}Pr(|T| > |t|) = {res}0.5541          {txt}Pr(T > t) = {res}0.2771
+
+Variable thetaX is  balanced  in block 6
+
+
+
+**************************************************** 
+Testing the balancing property in block 7
+**************************************************** 
+ obs: 259,  control: 81,  treated: 178
+
+
+
+Testing the balancing property for variable x in block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     81{col 22} .3703704{col 34} .0539903{col 46} .4859127{col 58} .2629263{col 70} .4778145
+{txt}high edu {c |}{res}{col 12}    178{col 22} .4157303{col 34} .0370447{col 46} .4942377{col 58} .3426242{col 70} .4888364
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    259{col 22} .4015444{col 34} .0305192{col 46} .4911598{col 58}  .341446{col 70} .4616428
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}  -.04536{col 34} .0658967{col 58}-.1751262{col 70} .0844062
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.6883
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     257
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.2459         {txt}Pr(|T| > |t|) = {res}0.4919          {txt}Pr(T > t) = {res}0.7541
+
+Variable x is  balanced  in block 7
+
+
+
+Testing the balancing property for variable theta in block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     81{col 22} .7311241{col 34} .0058167{col 46} .0523503{col 58} .7195485{col 70} .7426997
+{txt}high edu {c |}{res}{col 12}    178{col 22} .7377124{col 34} .0037422{col 46} .0499273{col 58} .7303273{col 70} .7450975
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    259{col 22} .7356519{col 34} .0031496{col 46} .0506881{col 58} .7294497{col 70} .7418541
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0065883{col 34} .0067944{col 58}-.0199682{col 70} .0067916
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.9697
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     257
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1666         {txt}Pr(|T| > |t|) = {res}0.3331          {txt}Pr(T > t) = {res}0.8334
+
+Variable theta is  balanced  in block 7
+
+
+
+Testing the balancing property for variable thetaSq in block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     81{col 22} .5372491{col 34} .0085565{col 46} .0770083{col 58} .5202212{col 70}  .554277
+{txt}high edu {c |}{res}{col 12}    178{col 22} .5466983{col 34} .0055169{col 46} .0736048{col 58} .5358109{col 70} .5575857
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    259{col 22} .5437431{col 34} .0046395{col 46} .0746651{col 58} .5346071{col 70} .5528792
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0094492{col 34} .0100094{col 58}  -.02916{col 70} .0102617
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.9440
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     257
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.1730         {txt}Pr(|T| > |t|) = {res}0.3460          {txt}Pr(T > t) = {res}0.8270
+
+Variable thetaSq is  balanced  in block 7
+
+
+
+Testing the balancing property for variable thetaX in block 7
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     81{col 22} .2520408{col 34} .0367969{col 46} .3311717{col 58} .1788127{col 70} .3252688
+{txt}high edu {c |}{res}{col 12}    178{col 22}  .288868{col 34}   .02579{col 46} .3440812{col 58} .2379726{col 70} .3397634
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    259{col 22} .2773506{col 34} .0211195{col 46} .3398862{col 58} .2357621{col 70} .3189392
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.0368272{col 34} .0455852{col 58}-.1265952{col 70} .0529407
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -0.8079
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     257
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.2100         {txt}Pr(|T| > |t|) = {res}0.4199          {txt}Pr(T > t) = {res}0.7900
+
+Variable thetaX is  balanced  in block 7
+
+
+
+**************************************************** 
+Testing the balancing property in block 8
+**************************************************** 
+ obs: 178,  control: 19,  treated: 159
+
+
+
+Testing the balancing property for variable x in block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     19{col 22} .3684211{col 34} .1136972{col 46} .4955946{col 58} .1295521{col 70}   .60729
+{txt}high edu {c |}{res}{col 12}    159{col 22} .6415094{col 34} .0381515{col 46} .4810724{col 58} .5661567{col 70} .7168622
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    178{col 22} .6123596{col 34} .0366211{col 46} .4885862{col 58} .5400894{col 70} .6846297
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.2730884{col 34} .1171391{col 58}-.5042664{col 70}-.0419104
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.3313
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     176
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0104         {txt}Pr(|T| > |t|) = {res}0.0209          {txt}Pr(T > t) = {res}0.9896
+
+Variable x is  balanced  in block 8
+
+
+
+Testing the balancing property for variable theta in block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     19{col 22} .8777555{col 34} .0142632{col 46} .0621718{col 58} .8477897{col 70} .9077214
+{txt}high edu {c |}{res}{col 12}    159{col 22} .8633783{col 34} .0048253{col 46} .0608453{col 58} .8538478{col 70} .8729088
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    178{col 22}  .864913{col 34} .0045701{col 46} .0609725{col 58} .8558941{col 70} .8739319
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0143772{col 34} .0148026{col 58}-.0148363{col 70} .0435907
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.9713
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     176
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.8336         {txt}Pr(|T| > |t|) = {res}0.3328          {txt}Pr(T > t) = {res}0.1664
+
+Variable theta is  balanced  in block 8
+
+
+
+Testing the balancing property for variable thetaSq in block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     19{col 22} .7741167{col 34} .0247725{col 46}  .107981{col 58} .7220715{col 70} .8261619
+{txt}high edu {c |}{res}{col 12}    159{col 22}  .749101{col 34} .0083345{col 46} .1050936{col 58} .7326397{col 70} .7655624
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    178{col 22} .7517712{col 34} .0078985{col 46} .1053795{col 58} .7361838{col 70} .7673587
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22} .0250156{col 34} .0255826{col 58}-.0254725{col 70} .0755038
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res}  0.9778
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     176
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.8353         {txt}Pr(|T| > |t|) = {res}0.3295          {txt}Pr(T > t) = {res}0.1647
+
+Variable thetaSq is  balanced  in block 8
+
+
+
+Testing the balancing property for variable thetaX in block 8
+
+{txt}Two-sample t test with equal variances
+{hline 9}{c TT}{hline 68}
+   Group{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. Err.{col 47}Std. Dev.{col 59}[95% Conf. Interval]
+{hline 9}{c +}{hline 68}
+ no high {c |}{res}{col 12}     19{col 22} .3081324{col 34} .0956724{col 46} .4170261{col 58} .1071323{col 70} .5091326
+{txt}high edu {c |}{res}{col 12}    159{col 22} .5419148{col 34}  .032472{col 46} .4094561{col 58} .4777796{col 70} .6060499
+{txt}{hline 9}{c +}{hline 68}
+combined {c |}{res}{col 12}    178{col 22} .5169605{col 34}  .031138{col 46} .4154322{col 58} .4555111{col 70} .5784099
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 22}-.2337824{col 34} .0995793{col 58}-.4303056{col 70}-.0372592
+{txt}{hline 9}{c BT}{hline 68}
+    diff = mean({res}no high{txt}) - mean({res}high edu{txt})                         t = {res} -2.3477
+{txt}Ho: diff = 0                                     degrees of freedom = {res}     176
+
+    {txt}Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = {res}0.0100         {txt}Pr(|T| > |t|) = {res}0.0200          {txt}Pr(T > t) = {res}0.9900
+
+Variable thetaX is  balanced  in block 8
+
+
+{txt}The balancing property is satisfied 
+
+
+This table shows the inferior bound, the number of treated
+and the number of controls for each block 
+
+  Inferior {c |} education attainment
+  of block {c |}  - expected subsidy
+of pscore  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         0 {c |}{res}       421         28 {txt}{c |}{res}       449 
+{txt}        .1 {c |}{res}       316         40 {txt}{c |}{res}       356 
+{txt}        .2 {c |}{res}       207         64 {txt}{c |}{res}       271 
+{txt}        .3 {c |}{res}       112         68 {txt}{c |}{res}       180 
+{txt}        .4 {c |}{res}        85         76 {txt}{c |}{res}       161 
+{txt}        .5 {c |}{res}        62         84 {txt}{c |}{res}       146 
+{txt}        .6 {c |}{res}        81        178 {txt}{c |}{res}       259 
+{txt}        .8 {c |}{res}        19        159 {txt}{c |}{res}       178 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+******************************************* 
+End of the algorithm to estimate the pscore 
+******************************************* 
+{txt}
+{com}. 
+. 
+. 
+. 
+. ********************** Prob 2 ****************************
+. 
+. *** 2-a ***
+. psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) ate
+{res}
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 51}Pseudo R2{col 67}= {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}-.2348704{col 26}{space 2} .2179398{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.6620245{col 67}{space 3} .1922837
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 2.544221{col 26}{space 2} .8871404{col 37}{space 1}    2.87{col 46}{space 3}0.004{col 54}{space 4} .8054582{col 67}{space 3} 4.282985
+{txt}{space 5}thetaSq {c |}{col 14}{res}{space 2} 1.344717{col 26}{space 2} .8037958{col 37}{space 1}    1.67{col 46}{space 3}0.094{col 54}{space 4} -.230694{col 67}{space 3} 2.920128
+{txt}{space 6}thetaX {c |}{col 14}{res}{space 2} .9116079{col 26}{space 2} .3883737{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} .1504095{col 67}{space 3} 1.672806
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.240901{col 26}{space 2} .2408429{col 37}{space 1}   -9.30{col 46}{space 3}0.000{col 54}{space 4}-2.712944{col 67}{space 3}-1.768858
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33185043   .743620142    .58823029   .077401855     7.60
+{txt}{col 17}        ATU {c |}{res} .722169106   1.11802454   .395855438            .        .
+{txt}{col 17}        ATE {c |}{col 56}{res} .462898074            .        .
+{txt}{hline 28}{c +}{hline 59}
+Note: S.E. does not take into account that the propensity score is estimated.
+
+           {c |} psmatch2:
+ psmatch2: {c |}   Common
+ Treatment {c |}  support
+assignment {c |} On suppor {c |}     Total
+{hline 11}{c +}{hline 11}{c +}{hline 10}
+ Untreated {c |}{res}     1,303 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}       697 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 11}{c +}{hline 10}
+     Total {c |}{res}     2,000 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. * psgraph
+. pstest $matchX2, both
+
+{txt}{hline 26}{c TT}{hline 34}{c TT}{hline 15}{c TT}{hline 10}
+                Unmatched {c |}       Mean               %reduct {c |}     t-test    {c |}  V(T)/
+Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t| {c |}  V(C)
+{hline 26}{c +}{hline 34}{c +}{hline 15}{c +}{hline 10}
+x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002 {c |}     .
+{txt}{col 24}M  {c |}{res} .44189   .39925      8.7    39.5{txt} {c |}{res}   1.61  0.107 {c |}     .
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000 {c |}  0.87
+{txt}{col 24}M  {c |}{res} .65759   .65988     -1.3    99.1{txt} {c |}{res}  -0.24  0.810 {c |}  0.91
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaSq               {col 24}U  {c |}{res} .46234   .19736    138.8        {txt} {c |}{res}  30.90  0.000 {c |}  1.77*
+{txt}{col 24}M  {c |}{res} .46234   .46849     -3.2    97.7{txt} {c |}{res}  -0.51  0.607 {c |}  0.88
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt} {c |}{res}  11.66  0.000 {c |}  2.61*
+{txt}{col 24}M  {c |}{res} .29115   .25172     13.6    73.2{txt} {c |}{res}   2.18  0.029 {c |}  1.13
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+{hline 26}{c BT}{hline 34}{c BT}{hline 15}{c BT}{hline 10}
+* if variance ratio outside [0.86; 1.16] for U and [0.86; 1.16] for M
+
+{hline 11}{c TT}{hline 71}
+ Sample    {c |} Ps R2   LR chi2   p>chi2   MeanBias   MedBias      B      R     %Var
+{hline 11}{c +}{hline 71}
+ Unmatched {c | }{res} 0.284    734.75    0.000     86.4      94.8     142.9*{col 70} 1.24{col 79} 67
+{txt} Matched   {c | }{res} 0.006     11.71    0.020      6.7       6.0      18.3{col 70} 0.90{col 79}  0
+{txt}{hline 11}{c BT}{hline 71}
+* if B>25%, R outside [0.5; 2]
+
+{com}. 
+. /*
+> bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(50) seed(321): /// 
+> psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) ate 
+> */
+. 
+. *** 2-b ***
+. psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) common ate
+{res}
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 51}Pseudo R2{col 67}= {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}-.2348704{col 26}{space 2} .2179398{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.6620245{col 67}{space 3} .1922837
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 2.544221{col 26}{space 2} .8871404{col 37}{space 1}    2.87{col 46}{space 3}0.004{col 54}{space 4} .8054582{col 67}{space 3} 4.282985
+{txt}{space 5}thetaSq {c |}{col 14}{res}{space 2} 1.344717{col 26}{space 2} .8037958{col 37}{space 1}    1.67{col 46}{space 3}0.094{col 54}{space 4} -.230694{col 67}{space 3} 2.920128
+{txt}{space 6}thetaX {c |}{col 14}{res}{space 2} .9116079{col 26}{space 2} .3883737{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} .1504095{col 67}{space 3} 1.672806
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.240901{col 26}{space 2} .2408429{col 37}{space 1}   -9.30{col 46}{space 3}0.000{col 54}{space 4}-2.712944{col 67}{space 3}-1.768858
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33219815   .744456074   .587742076   .077067568     7.63
+{txt}{col 17}        ATU {c |}{res} .721492347   1.12873228   .407239937            .        .
+{txt}{col 17}        ATE {c |}{col 56}{res} .472706059            .        .
+{txt}{hline 28}{c +}{hline 59}
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: {c |}   psmatch2: Common
+ Treatment {c |}        support
+assignment {c |} Off suppo  On suppor {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+ Untreated {c |}{res}        80      1,223 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}         1        696 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}        81      1,919 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. psgraph
+{res}{txt}
+{com}. 
+. pstest $matchX2, both
+
+{txt}{hline 26}{c TT}{hline 34}{c TT}{hline 15}{c TT}{hline 10}
+                Unmatched {c |}       Mean               %reduct {c |}     t-test    {c |}  V(T)/
+Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t| {c |}  V(C)
+{hline 26}{c +}{hline 34}{c +}{hline 15}{c +}{hline 10}
+x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002 {c |}     .
+{txt}{col 24}M  {c |}{res} .44109   .39805      8.8    38.9{txt} {c |}{res}   1.63  0.104 {c |}     .
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000 {c |}  0.87
+{txt}{col 24}M  {c |}{res} .65711      .66     -1.6    98.9{txt} {c |}{res}  -0.31  0.759 {c |}  0.92
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaSq               {col 24}U  {c |}{res} .46234   .19736    138.8        {txt} {c |}{res}  30.90  0.000 {c |}  1.77*
+{txt}{col 24}M  {c |}{res} .46158     .468     -3.4    97.6{txt} {c |}{res}  -0.54  0.590 {c |}  0.88
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt} {c |}{res}  11.66  0.000 {c |}  2.61*
+{txt}{col 24}M  {c |}{res} .29014   .25087     13.6    73.3{txt} {c |}{res}   2.18  0.030 {c |}  1.13
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+{hline 26}{c BT}{hline 34}{c BT}{hline 15}{c BT}{hline 10}
+* if variance ratio outside [0.86; 1.16] for U and [0.86; 1.16] for M
+
+{hline 11}{c TT}{hline 71}
+ Sample    {c |} Ps R2   LR chi2   p>chi2   MeanBias   MedBias      B      R     %Var
+{hline 11}{c +}{hline 71}
+ Unmatched {c | }{res} 0.284    734.75    0.000     86.4      94.8     142.9*{col 70} 1.24{col 79} 67
+{txt} Matched   {c | }{res} 0.006     11.16    0.025      6.8       6.1      17.9{col 70} 0.93{col 79}  0
+{txt}{hline 11}{c BT}{hline 71}
+* if B>25%, R outside [0.5; 2]
+
+{com}. 
+. /*
+> bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(50) seed(321): /// 
+> psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) common ate
+> */
+. 
+. *** 2-c ***
+. psmatch2 $d $matchX2, outcome(y) ai(1) ate
+{res}
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 51}Pseudo R2{col 67}= {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}-.2348704{col 26}{space 2} .2179398{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.6620245{col 67}{space 3} .1922837
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 2.544221{col 26}{space 2} .8871404{col 37}{space 1}    2.87{col 46}{space 3}0.004{col 54}{space 4} .8054582{col 67}{space 3} 4.282985
+{txt}{space 5}thetaSq {c |}{col 14}{res}{space 2} 1.344717{col 26}{space 2} .8037958{col 37}{space 1}    1.67{col 46}{space 3}0.094{col 54}{space 4} -.230694{col 67}{space 3} 2.920128
+{txt}{space 6}thetaX {c |}{col 14}{res}{space 2} .9116079{col 26}{space 2} .3883737{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} .1504095{col 67}{space 3} 1.672806
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.240901{col 26}{space 2} .2408429{col 37}{space 1}   -9.30{col 46}{space 3}0.000{col 54}{space 4}-2.712944{col 67}{space 3}-1.768858
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33185043   .842527809   .489322623    .07005424     6.98
+{txt}{col 17}        ATU {c |}{res} .722169106   1.09891681   .376747701    .13005381     2.90
+{txt}{col 17}        ATE {c |}{col 56}{res} .415980061   .094067639     4.42
+{txt}{hline 28}{c +}{hline 59}
+Note: Sample S.E.
+
+           {c |} psmatch2:
+ psmatch2: {c |}   Common
+ Treatment {c |}  support
+assignment {c |} On suppor {c |}     Total
+{hline 11}{c +}{hline 11}{c +}{hline 10}
+ Untreated {c |}{res}     1,303 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}       697 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 11}{c +}{hline 10}
+     Total {c |}{res}     2,000 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. 
+. *** 2-d ***
+. atts y $d, pscore(ps2) blockid(blc2)
+
+
+
+{col 1}{txt}ATT estimation with the Stratification method
+{col 1}Analytical standard errors
+
+{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}      697{col 13}     1303{col 25}    0.546{col 37}    0.068{col 49}    8.072
+
+{txt}{hline 57}
+
+{com}. gen att = r(atts)
+{txt}
+{com}. 
+. gen yNeg = -y
+{txt}
+{com}. gen dNeg = 1-$d
+{txt}
+{com}. 
+. atts yNeg dNeg, pscore(ps2) blockid(blc2)
+
+
+
+{col 1}{txt}ATT estimation with the Stratification method
+{col 1}Analytical standard errors
+
+{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}     1303{col 13}      697{col 25}    0.391{col 37}    0.090{col 49}    4.353
+
+{txt}{hline 57}
+
+{com}. gen atnt = r(atts)
+{txt}
+{com}. 
+. egen pr = mean($d)
+{txt}
+{com}. 
+. gen ate = pr*att + (1-pr)*atnt
+{txt}
+{com}. 
+. 
+. // how to store mean....??
+. 
+. 
+. ************************* Prob 3 ************************
+. 
+. *** 3-a ***
+. reg y $d $matchX
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    2000
+{txt}{hline 13}{char +}{hline 30}           F(  3,  1996) ={res}   68.74
+    {txt}   Model {char |} {res} 215.342017     3  71.7806722           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 2084.28536  1996  1.04423114           {txt}R-squared     = {res} 0.0936
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0923
+    {txt}   Total {char |} {res} 2299.62737  1999  1.15038888           {txt}Root MSE      = {res} 1.0219
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}d_eS {c |}{col 14}{res}{space 2} .5137591{col 26}{space 2} .0578388{col 37}{space 1}    8.88{col 46}{space 3}0.000{col 54}{space 4} .4003284{col 67}{space 3} .6271899
+{txt}{space 11}x {c |}{col 14}{res}{space 2} .2973332{col 26}{space 2} .0468713{col 37}{space 1}    6.34{col 46}{space 3}0.000{col 54}{space 4} .2054113{col 67}{space 3} .3892551
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} .2952091{col 26}{space 2} .1261282{col 37}{space 1}    2.34{col 46}{space 3}0.019{col 54}{space 4} .0478524{col 67}{space 3} .5425658
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .4925737{col 26}{space 2} .0613896{col 37}{space 1}    8.02{col 46}{space 3}0.000{col 54}{space 4} .3721793{col 67}{space 3} .6129682
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. 
+. *** 3-b *** 
+. reg y $matchX if $d==0
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    1303
+{txt}{hline 13}{char +}{hline 30}           F(  2,  1300) ={res}   10.72
+    {txt}   Model {char |} {res} 21.5347536     2  10.7673768           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 1305.41154  1300  1.00416272           {txt}R-squared     = {res} 0.0162
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0147
+    {txt}   Total {char |} {res} 1326.94629  1302  1.01915998           {txt}Root MSE      = {res} 1.0021
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}   .26657{col 26}{space 2} .0575759{col 37}{space 1}    4.63{col 46}{space 3}0.000{col 54}{space 4} .1536182{col 67}{space 3} .3795218
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} .0307384{col 26}{space 2}  .149866{col 37}{space 1}    0.21{col 46}{space 3}0.838{col 54}{space 4}-.2632674{col 67}{space 3} .3247441
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .6107451{col 26}{space 2} .0711061{col 37}{space 1}    8.59{col 46}{space 3}0.000{col 54}{space 4} .4712499{col 67}{space 3} .7502403
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. predict ypred
+{txt}(option xb assumed; fitted values)
+
+{com}. replace ypred=. if $d==0
+{txt}(1303 real changes made, 1303 to missing)
+
+{com}. 
+. gen err = y1-ypred
+{txt}(1303 missing values generated)
+
+{com}. gen 
+{err}=exp required
+{txt}{search r(100):r(100);}
+
+end of do-file
+
+{search r(100):r(100);}
+
+{com}. display ps
+{res}.18570811
+
+{com}. br ps
+
+. 
