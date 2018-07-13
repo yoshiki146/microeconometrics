@@ -1,11 +1,12 @@
 capture log close
-log using "/home2/177e605e/Documents/microeconometrics/ex1/exercise1.smcl", replace
+log using "~/Documents/GitHub/microeconometrics/exercise1.smcl", replace
+
 
 
 ********************* Prob 1 ************************
 *** 1-a ***
 
-use "/home2/177e605e/Documents/microeconometrics/ex1/dataBlun_noc.dta", clear
+use "~/Documents/GitHub/microeconometrics/dataBlun_noc.dta", clear
 
 global N=_N        /*Number of observations*/ 
 global h = 0.05      /* bandwidth  */
@@ -17,6 +18,7 @@ global matchX = "x theta"  /*These are the correct matching variables*/
  
 
 gen y = $d*ln(y1)+(1-$d)*ln(y0)            /* observed outcome  */
+
 
 pscore $d $matchX, pscore(ps) /*detail*/
 
@@ -45,7 +47,7 @@ psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) ate
 
 *** 2-b ***
 psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) common ate
-psgraph
+/* psgraph*/
 
 pstest $matchX2, both
 
@@ -77,18 +79,42 @@ display ate
 ************************* Prob 3 ************************
 
 *** 3-a ***
-reg y $d $matchX
+reg y $d $matchX  // just a regression
 
 *** 3-b *** 
-reg y $matchX if $d==0
-predict ypred
-replace ypred=. if $d==0
 
-gen atti = y1-ypred // ATT for individuals 
-
-egen attagg =sum(atti)
-egen nrT = sum($d)
-gen att3= attagg/nrT
+// Estimation for ATT using OLS aproach
+reg y $matchX if $d==0 // fit OLS for control group
+predict yCF1 if $d==1 // use the estimated coef to build counterfactual for T
+gen itt = y1-yCF1 // individuals treatment effect on treated
+egen ittagg =sum(itt) // indiv treatment effect, aggregated
+egen nrT = sum($d)   // # obs in treatment group
+gen att3= ittagg/nrT  // average treatment effect
 display att3
+
+// Then estimate ATNT
+reg y $matchX if $d==1 // fit OLS for T
+predict yCF0 if $d==0 // Counterfactual. If C were treated (or has same trend)
+gen itu = y0 - yCF0 // individuals treatment effect on untreated
+egen ituagg = sum(itu) // itu, aggregated 
+gen nrC = $N - nrT  // # obs in C
+gen atnt3 = ituagg/nrC // average treatment effect on non treated 
+display atnt3
+
+// Notice ATE is weighted ave of ATT and ATNT
+gen ate3 = (ittagg + ituagg)/$N
+display ate3
+
+*** 3-c *** 
+gen ypred3t = y1/ps if $d==1  // counterfactual if treated? See Eq20
+gen ypred3c = y0/(1-ps) if $d==0 // CF if untreated?
+egen ypred3tsum = sum(ypred3t)
+egen ypred3csum= sum(ypred3c)
+
+
+gen ate33 = (sum(ypred3t) - sum(ypred3c)) / $N
+display ate33
+
+
 *********************************************
 log close
