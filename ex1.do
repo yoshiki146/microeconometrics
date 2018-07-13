@@ -11,7 +11,6 @@ global N=_N        /*Number of observations*/
 global h = 0.05      /* bandwidth  */
 global d = "d_eS"    /* choose treatment indicator: economy with or*/ 
 
-// use quates (") to refer to text
 *without subsidized education 
 
 global matchX = "x theta"  /*These are the correct matching variables*/ 
@@ -19,7 +18,7 @@ global matchX = "x theta"  /*These are the correct matching variables*/
 
 gen y = $d*ln(y1)+(1-$d)*ln(y0)            /* observed outcome  */
 
-pscore $d $matchX, pscore(ps) detail
+pscore $d $matchX, pscore(ps) /*detail*/
 
 *** 1-b ***
 gen thetaSq = theta^2
@@ -27,7 +26,7 @@ gen thetaX = theta*x
 
 global matchX2 = "x theta thetaSq thetaX" 
 
-pscore $d $matchX2, pscore(ps2) blockid(blc2) detail 
+pscore $d $matchX2, pscore(ps2) blockid(blc2) /*detail*/ 
 
 
 
@@ -72,27 +71,24 @@ egen pr = mean($d)
 
 gen ate = pr*att + (1-pr)*atnt
 
+display ate
 
-// how to store mean....??
 
-/*
 ************************* Prob 3 ************************
 
 *** 3-a ***
 reg y $d $matchX
-
-
 
 *** 3-b *** 
 reg y $matchX if $d==0
 predict ypred
 replace ypred=. if $d==0
 
-gen err = y1-ypred
-// ATT hat
+gen atti = y1-ypred // ATT for individuals 
 
-
-*/
-
+egen attagg =sum(atti)
+egen nrT = sum($d)
+gen att3= attagg/nrT
+display att3
 *********************************************
 log close
