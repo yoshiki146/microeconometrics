@@ -1,0 +1,389 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}16 Jul 2018, 18:01:59
+{txt}
+{com}. 
+. 
+. *******************************
+. *******  Assignment 1  ********
+. *******************************
+. 
+. 
+. /* Packeges to install for matching method 
+> 
+> net search propensity score
+> // install `st0026_1 from http://www.stata-journal.com/software/sj4-2` 
+> 
+> ssc install psmatch2
+> 
+> */
+. 
+. ********************* Prob 1 ************************
+. 
+. *** 1-a ***
+. 
+. use "~/Documents/GitHub/microeconometrics/dataBlun_noc.dta", clear
+{txt}
+{com}. 
+. global N=_N        /* Number of observations */ 
+{txt}
+{com}. global h = 0.05      /* bandwidth */
+{txt}
+{com}. global d = "d_eS"    /* 1 if subsidy */ 
+{txt}
+{com}. 
+. 
+. global matchX = "x theta"  /* matching variable in true DGP */ 
+{txt}
+{com}.  
+. gen y = $d*ln(y1)+(1-$d)*ln(y0)            /* observed outcome  */
+{txt}
+{com}. 
+. pscore $d $matchX, pscore(ps) /*detail*/
+
+
+
+{res}**************************************************** 
+Algorithm to estimate the propensity score 
+**************************************************** 
+
+
+The treatment is d_eS
+
+        {txt}education {c |}
+     attainment - {c |}
+ expected subsidy {c |}      Freq.     Percent        Cum.
+{hline 18}{c +}{hline 35}
+no high education {c |}{res}      1,303       65.15       65.15
+{txt}   high education {c |}{res}        697       34.85      100.00
+{txt}{hline 18}{c +}{hline 35}
+            Total {c |}{res}      2,000      100.00
+
+
+
+Estimation of the propensity score 
+
+{txt}Iteration 0:   log likelihood = {res}-1293.0263
+{txt}Iteration 1:   log likelihood = {res}-949.40505
+{txt}Iteration 2:   log likelihood = {res}-929.84212
+{txt}Iteration 3:   log likelihood = {res}-929.57258
+{txt}Iteration 4:   log likelihood = {res}-929.57251
+
+{txt}Probit regression                                 Number of obs   = {res}      2000
+                                                  {txt}LR chi2({res}2{txt})      = {res}    726.91
+                                                  {txt}Prob > chi2     = {res}    0.0000
+{txt}Log likelihood = {res}-929.57251                       {txt}Pseudo R2       = {res}    0.2811
+
+{txt}{hline 13}{c TT}{hline 64}
+        d_eS {c |}      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+{hline 13}{c +}{hline 64}
+           x {c |}  {res} .2505665   .0680787     3.68   0.000     .1171347    .3839982
+       {txt}theta {c |}  {res} 4.323823   .1870913    23.11   0.000     3.957131    4.690516
+       {txt}_cons {c |}  {res}-2.769731   .1129163   -24.53   0.000    -2.991043   -2.548419
+{txt}{hline 13}{c BT}{hline 64}
+
+
+
+{res}Description of the estimated propensity score 
+
+                 {txt}Estimated propensity score
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} .0056593       .0028806
+{txt} 5%    {res} .0170007       .0030394
+{txt}10%    {res} .0346989       .0030471       {txt}Obs         {res}      2,000
+{txt}25%    {res}  .109664       .0031188       {txt}Sum of Wgt. {res}      2,000
+
+{txt}50%    {res} .2836471                      {txt}Mean          {res} .3495899
+                        {txt}Largest       Std. Dev.     {res} .2713848
+{txt}75%    {res}  .566432        .955243
+{txt}90%    {res} .7661133       .9558381       {txt}Variance      {res} .0736497
+{txt}95%    {res} .8541194       .9586234       {txt}Skewness      {res} .5314459
+{txt}99%    {res} .9220377       .9636999       {txt}Kurtosis      {res} 2.060968
+
+
+
+****************************************************** 
+Step 1: Identification of the optimal number of blocks 
+Use option detail if you want more detailed output 
+****************************************************** 
+
+
+{txt}The final number of blocks is 8
+
+This number of blocks ensures that the mean propensity score
+is not different for treated and controls in each blocks
+
+
+
+{res}********************************************************** 
+Step 2: Test of balancing property of the propensity score 
+Use option detail if you want more detailed output 
+********************************************************** 
+
+Variable x is not balanced in block 8
+
+{err}The balancing property is not satisfied 
+
+Try a different specification of the propensity score 
+
+  {txt}Inferior {c |} education attainment
+  of block {c |}  - expected subsidy
+of pscore  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         0 {c |}{res}       435         31 {txt}{c |}{res}       466 
+{txt}        .1 {c |}{res}       277         33 {txt}{c |}{res}       310 
+{txt}        .2 {c |}{res}       211         56 {txt}{c |}{res}       267 
+{txt}        .3 {c |}{res}       114         66 {txt}{c |}{res}       180 
+{txt}        .4 {c |}{res}       165        167 {txt}{c |}{res}       332 
+{txt}        .6 {c |}{res}        53         94 {txt}{c |}{res}       147 
+{txt}        .7 {c |}{res}        28        106 {txt}{c |}{res}       134 
+{txt}        .8 {c |}{res}        20        144 {txt}{c |}{res}       164 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+******************************************* 
+End of the algorithm to estimate the pscore 
+******************************************* 
+{txt}
+{com}. 
+. *** 1-b ***
+. gen thetaSq = theta^2
+{txt}
+{com}. gen thetaX = theta*x 
+{txt}
+{com}. 
+. global matchX2 = "x theta thetaSq thetaX" 
+{txt}
+{com}. 
+. pscore $d $matchX2, pscore(ps2) blockid(blc2) /*detail*/ 
+
+
+
+{res}**************************************************** 
+Algorithm to estimate the propensity score 
+**************************************************** 
+
+
+The treatment is d_eS
+
+        {txt}education {c |}
+     attainment - {c |}
+ expected subsidy {c |}      Freq.     Percent        Cum.
+{hline 18}{c +}{hline 35}
+no high education {c |}{res}      1,303       65.15       65.15
+{txt}   high education {c |}{res}        697       34.85      100.00
+{txt}{hline 18}{c +}{hline 35}
+            Total {c |}{res}      2,000      100.00
+
+
+
+Estimation of the propensity score 
+
+{txt}Iteration 0:   log likelihood = {res}-1293.0263
+{txt}Iteration 1:   log likelihood = {res}-942.77087
+{txt}Iteration 2:   log likelihood = {res}-925.97097
+{txt}Iteration 3:   log likelihood = {res}-925.65042
+{txt}Iteration 4:   log likelihood = {res}-925.64994
+
+{txt}Probit regression                                 Number of obs   = {res}      2000
+                                                  {txt}LR chi2({res}4{txt})      = {res}    734.75
+                                                  {txt}Prob > chi2     = {res}    0.0000
+{txt}Log likelihood = {res}-925.64994                       {txt}Pseudo R2       = {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 64}
+        d_eS {c |}      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+{hline 13}{c +}{hline 64}
+           x {c |}  {res}-.2348704   .2179395    -1.08   0.281    -.6620239    .1922831
+       {txt}theta {c |}  {res} 2.544221   .8871383     2.87   0.004     .8054624    4.282981
+     {txt}thetaSq {c |}  {res} 1.344717   .8037943     1.67   0.094    -.2306911    2.920125
+      {txt}thetaX {c |}  {res} .9116079   .3883733     2.35   0.019     .1504103    1.672806
+       {txt}_cons {c |}  {res}-2.240901   .2408422    -9.30   0.000    -2.712943   -1.768859
+{txt}{hline 13}{c BT}{hline 64}
+
+
+
+{res}Description of the estimated propensity score 
+
+                 {txt}Estimated propensity score
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} .0130349       .0074363
+{txt} 5%    {res} .0265484       .0076314
+{txt}10%    {res} .0469422       .0078329       {txt}Obs         {res}      2,000
+{txt}25%    {res} .1138968       .0078372       {txt}Sum of Wgt. {res}      2,000
+
+{txt}50%    {res} .2657103                      {txt}Mean          {res} .3483056
+                        {txt}Largest       Std. Dev.     {res} .2745203
+{txt}75%    {res} .5591377       .9851458
+{txt}90%    {res} .7860141       .9854774       {txt}Variance      {res} .0753614
+{txt}95%    {res} .8802079       .9869936       {txt}Skewness      {res} .6571694
+{txt}99%    {res} .9580365       .9895982       {txt}Kurtosis      {res} 2.236363
+
+
+
+****************************************************** 
+Step 1: Identification of the optimal number of blocks 
+Use option detail if you want more detailed output 
+****************************************************** 
+
+
+{txt}The final number of blocks is 8
+
+This number of blocks ensures that the mean propensity score
+is not different for treated and controls in each blocks
+
+
+
+{res}********************************************************** 
+Step 2: Test of balancing property of the propensity score 
+Use option detail if you want more detailed output 
+********************************************************** 
+
+
+{txt}The balancing property is satisfied 
+
+
+This table shows the inferior bound, the number of treated
+and the number of controls for each block 
+
+  Inferior {c |} education attainment
+  of block {c |}  - expected subsidy
+of pscore  {c |} no high e  high educ {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         0 {c |}{res}       421         28 {txt}{c |}{res}       449 
+{txt}        .1 {c |}{res}       316         40 {txt}{c |}{res}       356 
+{txt}        .2 {c |}{res}       207         64 {txt}{c |}{res}       271 
+{txt}        .3 {c |}{res}       112         68 {txt}{c |}{res}       180 
+{txt}        .4 {c |}{res}        85         76 {txt}{c |}{res}       161 
+{txt}        .5 {c |}{res}        62         84 {txt}{c |}{res}       146 
+{txt}        .6 {c |}{res}        81        178 {txt}{c |}{res}       259 
+{txt}        .8 {c |}{res}        19        159 {txt}{c |}{res}       178 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     1,303        697 {txt}{c |}{res}     2,000 
+
+
+
+******************************************* 
+End of the algorithm to estimate the pscore 
+******************************************* 
+{txt}
+{com}. 
+. 
+. 
+. 
+. ********************** Prob 2 ****************************
+. 
+. *** 2-a ***
+. psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) ate
+{res}
+{txt}Probit regression{col 49}Number of obs{col 67}= {res}     2,000
+{txt}{col 49}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 49}Pseudo R2{col 67}= {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}-.2348704{col 26}{space 2} .2179398{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.6620245{col 67}{space 3} .1922837
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 2.544221{col 26}{space 2} .8871404{col 37}{space 1}    2.87{col 46}{space 3}0.004{col 54}{space 4} .8054582{col 67}{space 3} 4.282985
+{txt}{space 5}thetaSq {c |}{col 14}{res}{space 2} 1.344717{col 26}{space 2} .8037958{col 37}{space 1}    1.67{col 46}{space 3}0.094{col 54}{space 4} -.230694{col 67}{space 3} 2.920128
+{txt}{space 6}thetaX {c |}{col 14}{res}{space 2} .9116079{col 26}{space 2} .3883737{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} .1504095{col 67}{space 3} 1.672806
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.240901{col 26}{space 2} .2408429{col 37}{space 1}   -9.30{col 46}{space 3}0.000{col 54}{space 4}-2.712944{col 67}{space 3}-1.768858
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33185043   .743620142    .58823029   .077401855     7.60
+{txt}{col 17}        ATU {c |}{res} .722169106   1.11802454   .395855438            .        .
+{txt}{col 17}        ATE {c |}{col 56}{res} .462898074            .        .
+{txt}{hline 28}{c +}{hline 59}
+Note: S.E. does not take into account that the propensity score is estimated.
+
+           {c |} psmatch2:
+ psmatch2: {c |}   Common
+ Treatment {c |}  support
+assignment {c |} On suppor {c |}     Total
+{hline 11}{c +}{hline 11}{c +}{hline 10}
+ Untreated {c |}{res}     1,303 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}       697 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 11}{c +}{hline 10}
+     Total {c |}{res}     2,000 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. /* psgraph */
+. pstest $matchX2, both
+
+{txt}{hline 26}{c TT}{hline 34}{c TT}{hline 15}{c TT}{hline 10}
+                Unmatched {c |}       Mean               %reduct {c |}     t-test    {c |}  V(T)/
+Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t| {c |}  V(C)
+{hline 26}{c +}{hline 34}{c +}{hline 15}{c +}{hline 10}
+x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002 {c |}     .
+{txt}{col 24}M  {c |}{res} .44189   .39925      8.7    39.5{txt} {c |}{res}   1.61  0.107 {c |}     .
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000 {c |}  0.87
+{txt}{col 24}M  {c |}{res} .65759   .65988     -1.3    99.1{txt} {c |}{res}  -0.24  0.810 {c |}  0.91
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaSq               {col 24}U  {c |}{res} .46234   .19736    138.8        {txt} {c |}{res}  30.90  0.000 {c |}  1.77*
+{txt}{col 24}M  {c |}{res} .46234   .46849     -3.2    97.7{txt} {c |}{res}  -0.51  0.607 {c |}  0.88
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt} {c |}{res}  11.66  0.000 {c |}  2.61*
+{txt}{col 24}M  {c |}{res} .29115   .25172     13.6    73.2{txt} {c |}{res}   2.18  0.029 {c |}  1.13
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+{hline 26}{c BT}{hline 34}{c BT}{hline 15}{c BT}{hline 10}
+* if variance ratio outside [0.86; 1.16] for U and [0.86; 1.16] for M
+
+{hline 11}{c TT}{hline 71}
+ Sample    {c |} Ps R2   LR chi2   p>chi2   MeanBias   MedBias      B      R     %Var
+{hline 11}{c +}{hline 71}
+ Unmatched {c | }{res} 0.284    734.75    0.000     86.4      94.8     142.9*{col 70} 1.24{col 79} 67
+{txt} Matched   {c | }{res} 0.006     11.71    0.020      6.7       6.0      18.3{col 70} 0.90{col 79}  0
+{txt}{hline 11}{c BT}{hline 71}
+* if B>25%, R outside [0.5; 2]
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. pstest $matchX2, both
+
+{txt}{hline 26}{c TT}{hline 34}{c TT}{hline 15}{c TT}{hline 10}
+                Unmatched {c |}       Mean               %reduct {c |}     t-test    {c |}  V(T)/
+Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t| {c |}  V(C)
+{hline 26}{c +}{hline 34}{c +}{hline 15}{c +}{hline 10}
+x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002 {c |}     .
+{txt}{col 24}M  {c |}{res} .44189   .39925      8.7    39.5{txt} {c |}{res}   1.61  0.107 {c |}     .
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000 {c |}  0.87
+{txt}{col 24}M  {c |}{res} .65759   .65988     -1.3    99.1{txt} {c |}{res}  -0.24  0.810 {c |}  0.91
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaSq               {col 24}U  {c |}{res} .46234   .19736    138.8        {txt} {c |}{res}  30.90  0.000 {c |}  1.77*
+{txt}{col 24}M  {c |}{res} .46234   .46849     -3.2    97.7{txt} {c |}{res}  -0.51  0.607 {c |}  0.88
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt} {c |}{res}  11.66  0.000 {c |}  2.61*
+{txt}{col 24}M  {c |}{res} .29115   .25172     13.6    73.2{txt} {c |}{res}   2.18  0.029 {c |}  1.13
+{txt}{col 24}   {c |}                                  {c |}               {c |}
+{hline 26}{c BT}{hline 34}{c BT}{hline 15}{c BT}{hline 10}
+* if variance ratio outside [0.86; 1.16] for U and [0.86; 1.16] for M
+
+{hline 11}{c TT}{hline 71}
+ Sample    {c |} Ps R2   LR chi2   p>chi2   MeanBias   MedBias      B      R     %Var
+{hline 11}{c +}{hline 71}
+ Unmatched {c | }{res} 0.284    734.75    0.000     86.4      94.8     142.9*{col 70} 1.24{col 79} 67
+{txt} Matched   {c | }{res} 0.006     11.71    0.020      6.7       6.0      18.3{col 70} 0.90{col 79}  0
+{txt}{hline 11}{c BT}{hline 71}
+* if B>25%, R outside [0.5; 2]
+
+{com}. 
+{txt}end of do-file
+
+{com}. help pstest
+
+. 
