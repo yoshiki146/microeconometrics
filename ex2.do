@@ -6,18 +6,18 @@ use "~/Documents/GitHub/microeconometrics/assignment_DiD1.dta", clear
 
 *******************
 **** Part1 ********
-******************
+*******************
 
 
 *** Q1 ***
-reg ly d t if x==1
+reg ly d t if x==1, robust 
 
 *** Q2 ***
 ** 2-1
-egen y11 = mean(ly) if x==1 & sub==1 &t==1
-egen y10 = mean(ly) if x==1 & sub==1 &t==0
-egen y01 = mean(ly) if x==1 & sub==0 &t==1
-egen y00 = mean(ly) if x==1 & sub==0 &t==0
+egen y11 = mean(ly) if x==1 & sub==1 & t==1
+egen y10 = mean(ly) if x==1 & sub==1 & t==0
+egen y01 = mean(ly) if x==1 & sub==0 & t==1
+egen y00 = mean(ly) if x==1 & sub==0 & t==0
 
 egen y11m = mean(y11)
 egen y10m = mean(y10)
