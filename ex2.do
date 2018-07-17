@@ -37,13 +37,20 @@ reg ly t sub tsub if x==1, robust
 reg ly t if x==1 & sub==0, robust
 
 ** 3-2
-egen p0 = mean(d_noS) // we can restrict region by (if x==1) but dont need to...
-egen p1 = mean(d_uS)  // ... since　we assume constant p in region 0
-gen diff = p1 - p0
+
+summarize d_uS if t==0 & sub==1 & x==1
+gen p10 = r(mean)
+summarize d_uS if t==1 & sub==1 & x==1
+gen p11 = r(mean)
+
+
+gen diff = p11 - p10
 gen late = itt1/diff
 display late
 
+/* I dont know why i put this command here,,,
 reg d t sub tsub if x==1, r
+*/
 
 ** 3-3 
 gen ly_1 = ly if t==1 & x==1
@@ -57,8 +64,8 @@ egen Ely_00 = mean(ly_00)
 summarize sub if t==0 & x==1
 gen pr1 = r(mean) if t==1 & x==1
 
-gen Ely = pr1*Ely_01 + (1-pr1)*Ely_00
-gen dly = ly_1 - Ely_00
+gen Ely = pr1*Ely_01 + (1-pr1)*Ely_00 // counterfactual. take weighted avg
+gen dly = ly_1 - Ely_00 
 
 
 gen d_1 = d if t==1 & x==1
@@ -73,9 +80,12 @@ gen Ed1 = pr1*Ed_01 + (1-pr1)*Ed_00
 gen dd = d_1 - Ed1
 replace dd = 0 if t==1 & sub==0 & x==1
 
+/*
 reg dd sub
 predict ddpred 
 reg dly ddpred, r 
+*/ 
+
 ivregress 2sls dly (dd=sub), r
 
 
