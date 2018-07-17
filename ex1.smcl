@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}16 Jul 2018, 18:01:59
+ {txt}opened on:  {res}17 Jul 2018, 17:00:44
 {txt}
 {com}. 
 . 
@@ -20,6 +20,7 @@
 > ssc install psmatch2
 > 
 > */
+. 
 . 
 . ********************* Prob 1 ************************
 . 
@@ -42,6 +43,8 @@
 . gen y = $d*ln(y1)+(1-$d)*ln(y0)            /* observed outcome  */
 {txt}
 {com}. 
+. 
+. 
 . pscore $d $matchX, pscore(ps) /*detail*/
 
 
@@ -348,27 +351,71 @@ thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt
 * if B>25%, R outside [0.5; 2]
 
 {com}. 
-{txt}end of do-file
+. /*
+> bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(50) seed(321): /// 
+> psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) ate 
+> */
+. 
+. *** 2-b ***
+. psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) common ate
+{res}
+{txt}Probit regression{col 49}Number of obs{col 67}= {res}     2,000
+{txt}{col 49}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 49}Pseudo R2{col 67}= {res}    0.2841
 
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}-.2348704{col 26}{space 2} .2179398{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.6620245{col 67}{space 3} .1922837
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 2.544221{col 26}{space 2} .8871404{col 37}{space 1}    2.87{col 46}{space 3}0.004{col 54}{space 4} .8054582{col 67}{space 3} 4.282985
+{txt}{space 5}thetaSq {c |}{col 14}{res}{space 2} 1.344717{col 26}{space 2} .8037958{col 37}{space 1}    1.67{col 46}{space 3}0.094{col 54}{space 4} -.230694{col 67}{space 3} 2.920128
+{txt}{space 6}thetaX {c |}{col 14}{res}{space 2} .9116079{col 26}{space 2} .3883737{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} .1504095{col 67}{space 3} 1.672806
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.240901{col 26}{space 2} .2408429{col 37}{space 1}   -9.30{col 46}{space 3}0.000{col 54}{space 4}-2.712944{col 67}{space 3}-1.768858
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33219815   .744456074   .587742076   .077067568     7.63
+{txt}{col 17}        ATU {c |}{res} .721492347   1.12873228   .407239937            .        .
+{txt}{col 17}        ATE {c |}{col 56}{res} .472706059            .        .
+{txt}{hline 28}{c +}{hline 59}
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: {c |}   psmatch2: Common
+ Treatment {c |}        support
+assignment {c |} Off suppo  On suppor {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+ Untreated {c |}{res}        80      1,223 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}         1        696 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}        81      1,919 {txt}{c |}{res}     2,000 
+
 {txt}
-{com}. pstest $matchX2, both
+{com}. psgraph
+{res}{txt}
+{com}. graph export comsup.png, width(500) replace
+{txt}(file comsup.png written in PNG format)
+
+{com}. 
+. pstest $matchX2, both
 
 {txt}{hline 26}{c TT}{hline 34}{c TT}{hline 15}{c TT}{hline 10}
                 Unmatched {c |}       Mean               %reduct {c |}     t-test    {c |}  V(T)/
 Variable          Matched {c |} Treated Control    %bias  |bias| {c |}    t    p>|t| {c |}  V(C)
 {hline 26}{c +}{hline 34}{c +}{hline 15}{c +}{hline 10}
 x                     {col 24}U  {c |}{res} .44189   .37145     14.4        {txt} {c |}{res}   3.08  0.002 {c |}     .
-{txt}{col 24}M  {c |}{res} .44189   .39925      8.7    39.5{txt} {c |}{res}   1.61  0.107 {c |}     .
+{txt}{col 24}M  {c |}{res} .44109   .39805      8.8    38.9{txt} {c |}{res}   1.63  0.104 {c |}     .
 {txt}{col 24}   {c |}                                  {c |}               {c |}
 theta                 {col 24}U  {c |}{res} .65759   .40361    141.5        {txt} {c |}{res}  29.83  0.000 {c |}  0.87
-{txt}{col 24}M  {c |}{res} .65759   .65988     -1.3    99.1{txt} {c |}{res}  -0.24  0.810 {c |}  0.91
+{txt}{col 24}M  {c |}{res} .65711      .66     -1.6    98.9{txt} {c |}{res}  -0.31  0.759 {c |}  0.92
 {txt}{col 24}   {c |}                                  {c |}               {c |}
 thetaSq               {col 24}U  {c |}{res} .46234   .19736    138.8        {txt} {c |}{res}  30.90  0.000 {c |}  1.77*
-{txt}{col 24}M  {c |}{res} .46234   .46849     -3.2    97.7{txt} {c |}{res}  -0.51  0.607 {c |}  0.88
+{txt}{col 24}M  {c |}{res} .46158     .468     -3.4    97.6{txt} {c |}{res}  -0.54  0.590 {c |}  0.88
 {txt}{col 24}   {c |}                                  {c |}               {c |}
 thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt} {c |}{res}  11.66  0.000 {c |}  2.61*
-{txt}{col 24}M  {c |}{res} .29115   .25172     13.6    73.2{txt} {c |}{res}   2.18  0.029 {c |}  1.13
+{txt}{col 24}M  {c |}{res} .29014   .25087     13.6    73.3{txt} {c |}{res}   2.18  0.030 {c |}  1.13
 {txt}{col 24}   {c |}                                  {c |}               {c |}
 {hline 26}{c BT}{hline 34}{c BT}{hline 15}{c BT}{hline 10}
 * if variance ratio outside [0.86; 1.16] for U and [0.86; 1.16] for M
@@ -377,13 +424,257 @@ thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt
  Sample    {c |} Ps R2   LR chi2   p>chi2   MeanBias   MedBias      B      R     %Var
 {hline 11}{c +}{hline 71}
  Unmatched {c | }{res} 0.284    734.75    0.000     86.4      94.8     142.9*{col 70} 1.24{col 79} 67
-{txt} Matched   {c | }{res} 0.006     11.71    0.020      6.7       6.0      18.3{col 70} 0.90{col 79}  0
+{txt} Matched   {c | }{res} 0.006     11.16    0.025      6.8       6.1      17.9{col 70} 0.93{col 79}  0
 {txt}{hline 11}{c BT}{hline 71}
 * if B>25%, R outside [0.5; 2]
 
 {com}. 
-{txt}end of do-file
-
-{com}. help pstest
-
+. /*
+> bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(50) seed(321): /// 
+> psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) common ate
+> */
 . 
+. *** 2-c ***
+. psmatch2 $d $matchX2, outcome(y) ai(1) ate
+{res}
+{txt}Probit regression{col 49}Number of obs{col 67}= {res}     2,000
+{txt}{col 49}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 49}Pseudo R2{col 67}= {res}    0.2841
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}-.2348704{col 26}{space 2} .2179398{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.6620245{col 67}{space 3} .1922837
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} 2.544221{col 26}{space 2} .8871404{col 37}{space 1}    2.87{col 46}{space 3}0.004{col 54}{space 4} .8054582{col 67}{space 3} 4.282985
+{txt}{space 5}thetaSq {c |}{col 14}{res}{space 2} 1.344717{col 26}{space 2} .8037958{col 37}{space 1}    1.67{col 46}{space 3}0.094{col 54}{space 4} -.230694{col 67}{space 3} 2.920128
+{txt}{space 6}thetaX {c |}{col 14}{res}{space 2} .9116079{col 26}{space 2} .3883737{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} .1504095{col 67}{space 3} 1.672806
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.240901{col 26}{space 2} .2408429{col 37}{space 1}   -9.30{col 46}{space 3}0.000{col 54}{space 4}-2.712944{col 67}{space 3}-1.768858
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{hline 28}{c TT}{hline 59}
+        Variable     Sample {c |}    Treated     Controls   Difference         S.E.   T-stat
+{hline 28}{c +}{hline 59}
+               y  Unmatched {c |}{res} 1.33185043   .722169106   .609681326   .048462249    12.58
+{txt}{col 17}        ATT {c |}{res} 1.33185043   .842527809   .489322623    .07005424     6.98
+{txt}{col 17}        ATU {c |}{res} .722169106   1.09891681   .376747701    .13005381     2.90
+{txt}{col 17}        ATE {c |}{col 56}{res} .415980061   .094067639     4.42
+{txt}{hline 28}{c +}{hline 59}
+Note: Sample S.E.
+
+           {c |} psmatch2:
+ psmatch2: {c |}   Common
+ Treatment {c |}  support
+assignment {c |} On suppor {c |}     Total
+{hline 11}{c +}{hline 11}{c +}{hline 10}
+ Untreated {c |}{res}     1,303 {txt}{c |}{res}     1,303 
+{txt}   Treated {c |}{res}       697 {txt}{c |}{res}       697 
+{txt}{hline 11}{c +}{hline 11}{c +}{hline 10}
+     Total {c |}{res}     2,000 {txt}{c |}{res}     2,000 
+
+{txt}
+{com}. 
+. /* 
+> gen att2c = r(att)
+> gen atnt2c = r(atu)
+> gen ate2c = r(ate)
+> display2c att atnt ate
+> */ 
+. 
+. *** 2-d ***
+. atts y $d, pscore(ps2) blockid(blc2) comsup
+
+
+
+{col 1}{txt}ATT estimation with the Stratification method
+{col 1}Analytical standard errors
+
+{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}      697{col 13}     1223{col 25}    0.546{col 37}    0.068{col 49}    8.074
+
+{txt}{hline 57}
+
+{com}. gen att2d = r(atts)
+{txt}
+{com}. 
+. gen yNeg = -y
+{txt}
+{com}. gen dNeg = 1-$d
+{txt}
+{com}. 
+. atts yNeg dNeg, pscore(ps2) blockid(blc2)
+
+
+
+{col 1}{txt}ATT estimation with the Stratification method
+{col 1}Analytical standard errors
+
+{hline 57}
+{col 1}n. treat.{col 13}n. contr.{col 25}      ATT{col 37}Std. Err.{col 49}        t
+{hline 57}
+
+{col 1}{res}     1303{col 13}      697{col 25}    0.391{col 37}    0.090{col 49}    4.353
+
+{txt}{hline 57}
+
+{com}. gen atnt2d = r(atts)
+{txt}
+{com}. 
+. egen pr = mean($d)
+{txt}
+{com}. 
+. gen ate2d = pr*att2d + (1-pr)*atnt2d
+{txt}
+{com}. 
+. display ate2d
+{res}.44524375
+{txt}
+{com}. 
+. 
+. ************************* Prob 3 ************************
+. 
+. *** 3-a ***
+. reg y $d $matchX
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     2,000
+{txt}{hline 13}{c +}{hline 34}   F(3, 1996)      = {res}    68.74
+{txt}       Model {c |} {res} 215.342017         3  71.7806722   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 2084.28536     1,996  1.04423114   {txt}R-squared       ={res}    0.0936
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0923
+{txt}       Total {c |} {res} 2299.62737     1,999  1.15038888   {txt}Root MSE        =   {res} 1.0219
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}d_eS {c |}{col 14}{res}{space 2} .5137591{col 26}{space 2} .0578388{col 37}{space 1}    8.88{col 46}{space 3}0.000{col 54}{space 4} .4003284{col 67}{space 3} .6271899
+{txt}{space 11}x {c |}{col 14}{res}{space 2} .2973332{col 26}{space 2} .0468713{col 37}{space 1}    6.34{col 46}{space 3}0.000{col 54}{space 4} .2054113{col 67}{space 3} .3892551
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} .2952091{col 26}{space 2} .1261282{col 37}{space 1}    2.34{col 46}{space 3}0.019{col 54}{space 4} .0478524{col 67}{space 3} .5425658
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .4925737{col 26}{space 2} .0613896{col 37}{space 1}    8.02{col 46}{space 3}0.000{col 54}{space 4} .3721793{col 67}{space 3} .6129682
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. *** 3-b *** 
+. 
+. // Estimation for ATT using OLS aproach
+. reg y $matchX if $d==0 // fit OLS for control group
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     1,303
+{txt}{hline 13}{c +}{hline 34}   F(2, 1300)      = {res}    10.72
+{txt}       Model {c |} {res} 21.5347536         2  10.7673768   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1305.41154     1,300  1.00416272   {txt}R-squared       ={res}    0.0162
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0147
+{txt}       Total {c |} {res} 1326.94629     1,302  1.01915998   {txt}Root MSE        =   {res} 1.0021
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2}   .26657{col 26}{space 2} .0575759{col 37}{space 1}    4.63{col 46}{space 3}0.000{col 54}{space 4} .1536182{col 67}{space 3} .3795218
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} .0307384{col 26}{space 2}  .149866{col 37}{space 1}    0.21{col 46}{space 3}0.838{col 54}{space 4}-.2632674{col 67}{space 3} .3247441
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .6107451{col 26}{space 2} .0711061{col 37}{space 1}    8.59{col 46}{space 3}0.000{col 54}{space 4} .4712499{col 67}{space 3} .7502403
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. predict yCF1 if $d==1 // use the estimated coef to build counterfactual for T
+{txt}(option {bf:xb} assumed; fitted values)
+(1,303 missing values generated)
+
+{com}. gen att_i = y-yCF1 // individuals treatment effect on treated
+{txt}(1,303 missing values generated)
+
+{com}. egen attagg = sum(att_i) // (average) treatment effect on treated individual, aggregated
+{txt}
+{com}. egen nrT = sum($d)   // # obs in treatment group
+{txt}
+{com}. gen att= attagg/nrT  // average treatment effect
+{txt}
+{com}. display att
+{res}.58309633
+{txt}
+{com}. 
+. // Then estimate ATNT
+. reg y $matchX if $d==1 // fit OLS for T
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       697
+{txt}{hline 13}{c +}{hline 34}   F(2, 694)       = {res}    15.85
+{txt}       Model {c |} {res} 35.1119334         2  17.5559667   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 768.776711       694  1.10774742   {txt}R-squared       ={res}    0.0437
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0409
+{txt}       Total {c |} {res} 803.888644       696  1.15501242   {txt}Root MSE        =   {res} 1.0525
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}x {c |}{col 14}{res}{space 2} .3387322{col 26}{space 2} .0802779{col 37}{space 1}    4.22{col 46}{space 3}0.000{col 54}{space 4} .1811155{col 67}{space 3} .4963489
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} .8527052{col 26}{space 2} .2305056{col 37}{space 1}    3.70{col 46}{space 3}0.000{col 54}{space 4} .4001333{col 67}{space 3} 1.305277
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .6214326{col 26}{space 2} .1604769{col 37}{space 1}    3.87{col 46}{space 3}0.000{col 54}{space 4} .3063541{col 67}{space 3} .9365111
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. predict yCF0 if $d==0 // Counterfactual. If C were treated (or has same trend)
+{txt}(option {bf:xb} assumed; fitted values)
+(697 missing values generated)
+
+{com}. gen atu_i = yCF0 - y // (average) treatment effect on untreated individual
+{txt}(697 missing values generated)
+
+{com}. egen atuagg = sum(atu_i) // atu_i, aggregated 
+{txt}
+{com}. gen nrC = $N - nrT  // # obs in C
+{txt}
+{com}. gen atnt = atuagg/nrC // average treatment effect on non treated 
+{txt}
+{com}. display atnt
+{res}.3692503
+{txt}
+{com}. 
+. // Notice ATE is weighted ave of ATT and ATNT
+. gen ate = (attagg + atuagg)/$N
+{txt}
+{com}. display ate
+{res}.44377565
+{txt}
+{com}. 
+. *** 3-c *** 
+. 
+. 
+. 
+. reg y $d $matchX [iw=ps2]
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       696
+{txt}{hline 13}{c +}{hline 34}   F(3, 692)       = {res}    31.38
+{txt}       Model {c |} {res} 98.3475841         3   32.782528   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 723.513328       692  1.04553949   {txt}R-squared       ={res}    0.1197
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1166
+{txt}       Total {c |} {res} 821.860912       695  1.18253369   {txt}Root MSE        =   {res} 1.0221
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}d_eS {c |}{col 14}{res}{space 2} .5881885{col 26}{space 2} .0912465{col 37}{space 1}    6.45{col 46}{space 3}0.000{col 54}{space 4} .4090353{col 67}{space 3} .7673418
+{txt}{space 11}x {c |}{col 14}{res}{space 2} .3047372{col 26}{space 2} .0785076{col 37}{space 1}    3.88{col 46}{space 3}0.000{col 54}{space 4} .1505954{col 67}{space 3} .4588789
+{txt}{space 7}theta {c |}{col 14}{res}{space 2} .3827306{col 26}{space 2} .2586481{col 37}{space 1}    1.48{col 46}{space 3}0.139{col 54}{space 4}-.1250986{col 67}{space 3} .8905599
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .3970636{col 26}{space 2}   .15985{col 37}{space 1}    2.48{col 46}{space 3}0.013{col 54}{space 4} .0832144{col 67}{space 3} .7109129
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. /*
+> gen ypred3t = y/ps if $d==1  // counterfactual if treated? See Eq20
+> gen ypred3c = y/(1-ps) if $d==0 // CF if untreated?
+> egen ypred3tsum = sum(ypred3t)
+> egen ypred3csum= sum(ypred3c)
+> 
+> 
+> gen ate33 = (sum(ypred3t) - sum(ypred3c)) / $N
+> display ate33
+> */
+. 
+. 
+. *********************************************
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}17 Jul 2018, 17:00:53
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
