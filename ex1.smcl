@@ -1,9 +1,9 @@
 {smcl}
 {com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
+       {txt}log:  {res}/home2/177e605e/Documents/GitHub/microeconometrics/ex1.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}17 Jul 2018, 17:00:44
+ {txt}opened on:  {res}17 Jul 2018, 18:21:33
 {txt}
 {com}. 
 . 
@@ -97,8 +97,8 @@ Estimation of the propensity score
       Percentiles      Smallest
  1%    {res} .0056593       .0028806
 {txt} 5%    {res} .0170007       .0030394
-{txt}10%    {res} .0346989       .0030471       {txt}Obs         {res}      2,000
-{txt}25%    {res}  .109664       .0031188       {txt}Sum of Wgt. {res}      2,000
+{txt}10%    {res} .0346989       .0030471       {txt}Obs         {res}       2000
+{txt}25%    {res}  .109664       .0031188       {txt}Sum of Wgt. {res}       2000
 
 {txt}50%    {res} .2836471                      {txt}Mean          {res} .3495899
                         {txt}Largest       Std. Dev.     {res} .2713848
@@ -218,8 +218,8 @@ Estimation of the propensity score
       Percentiles      Smallest
  1%    {res} .0130349       .0074363
 {txt} 5%    {res} .0265484       .0076314
-{txt}10%    {res} .0469422       .0078329       {txt}Obs         {res}      2,000
-{txt}25%    {res} .1138968       .0078372       {txt}Sum of Wgt. {res}      2,000
+{txt}10%    {res} .0469422       .0078329       {txt}Obs         {res}       2000
+{txt}25%    {res} .1138968       .0078372       {txt}Sum of Wgt. {res}       2000
 
 {txt}50%    {res} .2657103                      {txt}Mean          {res} .3483056
                         {txt}Largest       Std. Dev.     {res} .2745203
@@ -285,10 +285,10 @@ End of the algorithm to estimate the pscore
 . *** 2-a ***
 . psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) ate
 {res}
-{txt}Probit regression{col 49}Number of obs{col 67}= {res}     2,000
-{txt}{col 49}LR chi2({res}4{txt}){col 67}= {res}    734.75
-{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
-{txt}Log likelihood = {res}-925.64994{txt}{col 49}Pseudo R2{col 67}= {res}    0.2841
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 51}Pseudo R2{col 67}= {res}    0.2841
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
@@ -359,10 +359,10 @@ thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt
 . *** 2-b ***
 . psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) common ate
 {res}
-{txt}Probit regression{col 49}Number of obs{col 67}= {res}     2,000
-{txt}{col 49}LR chi2({res}4{txt}){col 67}= {res}    734.75
-{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
-{txt}Log likelihood = {res}-925.64994{txt}{col 49}Pseudo R2{col 67}= {res}    0.2841
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 51}Pseudo R2{col 67}= {res}    0.2841
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
@@ -437,10 +437,10 @@ thetaX                {col 24}U  {c |}{res} .29115   .14406     50.9        {txt
 . *** 2-c ***
 . psmatch2 $d $matchX2, outcome(y) ai(1) ate
 {res}
-{txt}Probit regression{col 49}Number of obs{col 67}= {res}     2,000
-{txt}{col 49}LR chi2({res}4{txt}){col 67}= {res}    734.75
-{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
-{txt}Log likelihood = {res}-925.64994{txt}{col 49}Pseudo R2{col 67}= {res}    0.2841
+{txt}Probit regression{col 51}Number of obs{col 67}= {res}      2000
+{txt}{col 51}LR chi2({res}4{txt}){col 67}= {res}    734.75
+{txt}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log likelihood = {res}-925.64994{txt}{col 51}Pseudo R2{col 67}= {res}    0.2841
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}        d_eS{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
@@ -538,12 +538,12 @@ assignment {c |} On suppor {c |}     Total
 . *** 3-a ***
 . reg y $d $matchX
 
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     2,000
-{txt}{hline 13}{c +}{hline 34}   F(3, 1996)      = {res}    68.74
-{txt}       Model {c |} {res} 215.342017         3  71.7806722   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 2084.28536     1,996  1.04423114   {txt}R-squared       ={res}    0.0936
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0923
-{txt}       Total {c |} {res} 2299.62737     1,999  1.15038888   {txt}Root MSE        =   {res} 1.0219
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    2000
+{txt}{hline 13}{char +}{hline 30}           F(  3,  1996) ={res}   68.74
+    {txt}   Model {char |} {res} 215.342017     3  71.7806722           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 2084.28536  1996  1.04423114           {txt}R-squared     = {res} 0.0936
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0923
+    {txt}   Total {char |} {res} 2299.62737  1999  1.15038888           {txt}Root MSE      = {res} 1.0219
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
@@ -560,12 +560,12 @@ assignment {c |} On suppor {c |}     Total
 . // Estimation for ATT using OLS aproach
 . reg y $matchX if $d==0 // fit OLS for control group
 
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     1,303
-{txt}{hline 13}{c +}{hline 34}   F(2, 1300)      = {res}    10.72
-{txt}       Model {c |} {res} 21.5347536         2  10.7673768   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 1305.41154     1,300  1.00416272   {txt}R-squared       ={res}    0.0162
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0147
-{txt}       Total {c |} {res} 1326.94629     1,302  1.01915998   {txt}Root MSE        =   {res} 1.0021
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    1303
+{txt}{hline 13}{char +}{hline 30}           F(  2,  1300) ={res}   10.72
+    {txt}   Model {char |} {res} 21.5347536     2  10.7673768           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 1305.41154  1300  1.00416272           {txt}R-squared     = {res} 0.0162
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0147
+    {txt}   Total {char |} {res} 1326.94629  1302  1.01915998           {txt}Root MSE      = {res} 1.0021
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
@@ -576,11 +576,11 @@ assignment {c |} On suppor {c |}     Total
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. predict yCF1 if $d==1 // use the estimated coef to build counterfactual for T
-{txt}(option {bf:xb} assumed; fitted values)
-(1,303 missing values generated)
+{txt}(option xb assumed; fitted values)
+(1303 missing values generated)
 
 {com}. gen att_i = y-yCF1 // individuals treatment effect on treated
-{txt}(1,303 missing values generated)
+{txt}(1303 missing values generated)
 
 {com}. egen attagg = sum(att_i) // (average) treatment effect on treated individual, aggregated
 {txt}
@@ -595,12 +595,12 @@ assignment {c |} On suppor {c |}     Total
 . // Then estimate ATNT
 . reg y $matchX if $d==1 // fit OLS for T
 
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       697
-{txt}{hline 13}{c +}{hline 34}   F(2, 694)       = {res}    15.85
-{txt}       Model {c |} {res} 35.1119334         2  17.5559667   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 768.776711       694  1.10774742   {txt}R-squared       ={res}    0.0437
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0409
-{txt}       Total {c |} {res} 803.888644       696  1.15501242   {txt}Root MSE        =   {res} 1.0525
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}     697
+{txt}{hline 13}{char +}{hline 30}           F(  2,   694) ={res}   15.85
+    {txt}   Model {char |} {res} 35.1119334     2  17.5559667           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 768.776711   694  1.10774742           {txt}R-squared     = {res} 0.0437
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0409
+    {txt}   Total {char |} {res} 803.888644   696  1.15501242           {txt}Root MSE      = {res} 1.0525
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
@@ -611,7 +611,7 @@ assignment {c |} On suppor {c |}     Total
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. predict yCF0 if $d==0 // Counterfactual. If C were treated (or has same trend)
-{txt}(option {bf:xb} assumed; fitted values)
+{txt}(option xb assumed; fitted values)
 (697 missing values generated)
 
 {com}. gen atu_i = yCF0 - y // (average) treatment effect on untreated individual
@@ -635,46 +635,40 @@ assignment {c |} On suppor {c |}     Total
 {txt}
 {com}. 
 . *** 3-c *** 
-. 
-. 
-. 
-. reg y $d $matchX [iw=ps2]
+. gen c1 = y/ps2 if $d==1
+{txt}(1303 missing values generated)
 
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       696
-{txt}{hline 13}{c +}{hline 34}   F(3, 692)       = {res}    31.38
-{txt}       Model {c |} {res} 98.3475841         3   32.782528   {txt}Prob > F        ={res}    0.0000
-{txt}    Residual {c |} {res} 723.513328       692  1.04553949   {txt}R-squared       ={res}    0.1197
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1166
-{txt}       Total {c |} {res} 821.860912       695  1.18253369   {txt}Root MSE        =   {res} 1.0221
+{com}. gen c2 = y/(1-ps2) if $d==0
+{txt}(697 missing values generated)
 
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}           y{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 8}d_eS {c |}{col 14}{res}{space 2} .5881885{col 26}{space 2} .0912465{col 37}{space 1}    6.45{col 46}{space 3}0.000{col 54}{space 4} .4090353{col 67}{space 3} .7673418
-{txt}{space 11}x {c |}{col 14}{res}{space 2} .3047372{col 26}{space 2} .0785076{col 37}{space 1}    3.88{col 46}{space 3}0.000{col 54}{space 4} .1505954{col 67}{space 3} .4588789
-{txt}{space 7}theta {c |}{col 14}{res}{space 2} .3827306{col 26}{space 2} .2586481{col 37}{space 1}    1.48{col 46}{space 3}0.139{col 54}{space 4}-.1250986{col 67}{space 3} .8905599
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .3970636{col 26}{space 2}   .15985{col 37}{space 1}    2.48{col 46}{space 3}0.013{col 54}{space 4} .0832144{col 67}{space 3} .7109129
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
+{com}. egen c3 = sum(c1) 
+{txt}
+{com}. egen c4 = sum(c2)
+{txt}
+{com}. gen ATE = (c3-c4)/$N
+{txt}
+{com}. display ATE
+{res}.48521826
+{txt}
 {com}. 
-. /*
-> gen ypred3t = y/ps if $d==1  // counterfactual if treated? See Eq20
-> gen ypred3c = y/(1-ps) if $d==0 // CF if untreated?
-> egen ypred3tsum = sum(ypred3t)
-> egen ypred3csum= sum(ypred3c)
-> 
-> 
-> gen ate33 = (sum(ypred3t) - sum(ypred3c)) / $N
-> display ate33
-> */
-. 
-. 
-. *********************************************
-. log close
-      {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
-  {txt}log type:  {res}smcl
- {txt}closed on:  {res}17 Jul 2018, 17:00:53
-{txt}{.-}
-{smcl}
-{txt}{sf}{ul off}
+{txt}end of do-file
+
+{com}. do "/var/folders/zz/zyxvpxvq6csfxvn_n001gt8m00byk5/T//SD11711.000000"
+{txt}
+{com}. 
+. gen e1 = y/pr
+{txt}
+{com}. egen ATT = mean(e1)
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/zz/zyxvpxvq6csfxvn_n001gt8m00byk5/T//SD11711.000000"
+{txt}
+{com}. dis ATT
+{res}2.6819024
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. 

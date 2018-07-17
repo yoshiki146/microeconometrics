@@ -128,8 +128,28 @@ gen ate = (attagg + atuagg)/$N
 display ate
 
 *** 3-c *** 
+gen c1 = y/ps2 if $d==1
+gen c2 = y/(1-ps2) if $d==0
+egen c3 = sum(c1) 
+egen c4 = sum(c2)
+gen ATE = (c3-c4)/$N
+display ATE
 
-reg y $d $matchX [iw=ps2]
+gen e1 = y/ps2
+egen ATT = mean(e1)
+dis ATT
+
+egen ATTagg = sum(ATTfoo)
+gen ATT = ATTagg/$N
+gen ATNT = 
+gen ATT = ATTavg/pr
+
+gen ATNT_i = y/psC
+egen ATNTagg= sum(ATNT_i)
+egen ATNTavg = mean(ATNT_i)
+gen ATNT = ATNTavg/(1-pr)
+gen ATE= (ATTagg - ATNTagg)/$N
+
 
 /*
 gen ypred3t = y/ps if $d==1  // counterfactual if treated? See Eq20
