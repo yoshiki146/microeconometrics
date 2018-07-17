@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex2.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}17 Jul 2018, 21:40:23
+ {txt}opened on:  {res}17 Jul 2018, 22:21:33
 {txt}
 {com}. 
 . use "~/Documents/GitHub/microeconometrics/assignment_DiD1.dta", clear
@@ -135,11 +135,11 @@
 {res}.45617899
 {txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. ** 3-3 
+. /* I dont know why i put this command here,,,
+> reg d t sub tsub if x==1, r
+> */
+. 
+. ** 3-3 
 . gen ly_1 = ly if t==1 & x==1
 {txt}(40,277 missing values generated)
 
@@ -401,6 +401,352 @@
 {txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.0052812{col 26}{space 2} .0088895{col 37}{space 1}   -0.59{col 46}{space 3}0.552{col 54}{space 4}-.0227044{col 67}{space 3} .0121419
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {p 0 15 24}Instrumented:{space 2}ddp{p_end}
+{p 0 15 24}Instruments:{space 3}sub{p_end}
+
+{com}. 
+. ** 5-3
+. gen expy = exp(ly)
+{txt}
+{com}. 
+. reg expy t sub tsub if x==1, r
+
+{txt}Linear regression                               Number of obs     = {res}    19,762
+                                                {txt}F(3, 19758)       =  {res}     6.09
+                                                {txt}Prob > F          = {res}    0.0004
+                                                {txt}R-squared         = {res}    0.0014
+                                                {txt}Root MSE          =    {res} 8.2376
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        expy{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2} .0635401{col 26}{space 2} .1199023{col 37}{space 1}    0.53{col 46}{space 3}0.596{col 54}{space 4}-.1714785{col 67}{space 3} .2985588
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} .5730242{col 26}{space 2} .3393583{col 37}{space 1}    1.69{col 46}{space 3}0.091{col 54}{space 4}-.0921465{col 67}{space 3} 1.238195
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2} 1.111479{col 26}{space 2} .5556907{col 37}{space 1}    2.00{col 46}{space 3}0.045{col 54}{space 4} .0222787{col 67}{space 3}  2.20068
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.386959{col 26}{space 2} .0794463{col 37}{space 1}   67.81{col 46}{space 3}0.000{col 54}{space 4} 5.231238{col 67}{space 3} 5.542681
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. reg expy t sub tsub if x==0, r
+
+{txt}Linear regression                               Number of obs     = {res}    30,238
+                                                {txt}F(3, 30234)       =  {res}     2.74
+                                                {txt}Prob > F          = {res}    0.0419
+                                                {txt}R-squared         = {res}    0.0005
+                                                {txt}Root MSE          =    {res} 5.7603
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        expy{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2} .0236725{col 26}{space 2} .0671907{col 37}{space 1}    0.35{col 46}{space 3}0.725{col 54}{space 4}-.1080241{col 67}{space 3}  .155369
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} .7654186{col 26}{space 2} .2841755{col 37}{space 1}    2.69{col 46}{space 3}0.007{col 54}{space 4} .2084226{col 67}{space 3} 1.322415
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2} -.588619{col 26}{space 2} .3402438{col 37}{space 1}   -1.73{col 46}{space 3}0.084{col 54}{space 4}-1.255511{col 67}{space 3} .0782732
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.877434{col 26}{space 2} .0453624{col 37}{space 1}   85.48{col 46}{space 3}0.000{col 54}{space 4} 3.788522{col 67}{space 3} 3.966346
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg y t sub ysun if x==1,r 
+{bf}{err}y{sf} ambiguous abbreviation
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg ly t sub ysun if x==1,r 
+{err}variable {bf}ysun{sf} not found
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg ly t sub ysub if x==1,r 
+{err}variable {bf}ysub{sf} not found
+{txt}{search r(111), local:r(111);}
+
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg ly t sub tsub if x==1,r 
+
+{txt}Linear regression                               Number of obs     = {res}    19,762
+                                                {txt}F(3, 19758)       =  {res}    12.93
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0020
+                                                {txt}Root MSE          =    {res} 1.0729
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}          ly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2}-.0087833{col 26}{space 2} .0157474{col 37}{space 1}   -0.56{col 46}{space 3}0.577{col 54}{space 4}-.0396496{col 67}{space 3}  .022083
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} .0795828{col 26}{space 2} .0459049{col 37}{space 1}    1.73{col 46}{space 3}0.083{col 54}{space 4}-.0103947{col 67}{space 3} .1695602
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2} .1890406{col 26}{space 2} .0642405{col 37}{space 1}    2.94{col 46}{space 3}0.003{col 54}{space 4} .0631239{col 67}{space 3} .3149573
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.107719{col 26}{space 2} .0109938{col 37}{space 1}  100.76{col 46}{space 3}0.000{col 54}{space 4}  1.08617{col 67}{space 3} 1.129268
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg expy t sub tsub if x==1, r
+
+{txt}Linear regression                               Number of obs     = {res}    19,762
+                                                {txt}F(3, 19758)       =  {res}     6.09
+                                                {txt}Prob > F          = {res}    0.0004
+                                                {txt}R-squared         = {res}    0.0014
+                                                {txt}Root MSE          =    {res} 8.2376
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        expy{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2} .0635401{col 26}{space 2} .1199023{col 37}{space 1}    0.53{col 46}{space 3}0.596{col 54}{space 4}-.1714785{col 67}{space 3} .2985588
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} .5730242{col 26}{space 2} .3393583{col 37}{space 1}    1.69{col 46}{space 3}0.091{col 54}{space 4}-.0921465{col 67}{space 3} 1.238195
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2} 1.111479{col 26}{space 2} .5556907{col 37}{space 1}    2.00{col 46}{space 3}0.045{col 54}{space 4} .0222787{col 67}{space 3}  2.20068
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.386959{col 26}{space 2} .0794463{col 37}{space 1}   67.81{col 46}{space 3}0.000{col 54}{space 4} 5.231238{col 67}{space 3} 5.542681
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. 
+. 
+. 
+. 
+. 
+. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. use "~/Documents/GitHub/microeconometrics/assignment_DiD2.dta", clear
+{txt}
+{com}. 
+. 
+. *** Q6 ***
+. 
+. ** 6-1
+. gen tsub = t*sub
+{txt}
+{com}. reg ly t sub tsub if x==1, robust
+
+{txt}Linear regression                               Number of obs     = {res}    19,762
+                                                {txt}F(3, 19758)       =  {res}    71.80
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0109
+                                                {txt}Root MSE          =    {res} 1.0666
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}          ly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2}-.0442623{col 26}{space 2} .0162048{col 37}{space 1}   -2.73{col 46}{space 3}0.006{col 54}{space 4} -.076025{col 67}{space 3}-.0124997
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} .0795828{col 26}{space 2} .0459049{col 37}{space 1}    1.73{col 46}{space 3}0.083{col 54}{space 4}-.0103947{col 67}{space 3} .1695602
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2} .3275995{col 26}{space 2} .0538272{col 37}{space 1}    6.09{col 46}{space 3}0.000{col 54}{space 4} .2220937{col 67}{space 3} .4331054
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.107719{col 26}{space 2} .0109938{col 37}{space 1}  100.76{col 46}{space 3}0.000{col 54}{space 4}  1.08617{col 67}{space 3} 1.129268
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg z t sub tsub if x==1, r
+
+{txt}Linear regression                               Number of obs     = {res}    19,762
+                                                {txt}F(3, 19758)       =  {res}   208.32
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0296
+                                                {txt}Root MSE          =    {res} .88709
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}           z{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2} -.091539{col 26}{space 2} .0134883{col 37}{space 1}   -6.79{col 46}{space 3}0.000{col 54}{space 4}-.1179772{col 67}{space 3}-.0651009
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} -.006601{col 26}{space 2} .0377133{col 37}{space 1}   -0.18{col 46}{space 3}0.861{col 54}{space 4}-.0805222{col 67}{space 3} .0673203
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2}  .576186{col 26}{space 2} .0440726{col 37}{space 1}   13.07{col 46}{space 3}0.000{col 54}{space 4} .4897999{col 67}{space 3} .6625721
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0000923{col 26}{space 2} .0092956{col 37}{space 1}    0.01{col 46}{space 3}0.992{col 54}{space 4}-.0181279{col 67}{space 3} .0183125
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. gen tx = t*x
+{txt}
+{com}. reg ly t x tx
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    50,000
+{txt}{hline 13}{c +}{hline 34}   F(3, 49996)     = {res}   405.10
+{txt}       Model {c |} {res} 1381.15629         3  460.385429   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 56818.7796    49,996  1.13646651   {txt}R-squared       ={res}    0.0237
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0237
+{txt}       Total {c |} {res} 58199.9359    49,999    1.164022   {txt}Root MSE        =   {res} 1.0661
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          ly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2}-.0022403{col 26}{space 2} .0122612{col 37}{space 1}   -0.18{col 46}{space 3}0.855{col 54}{space 4}-.0262723{col 67}{space 3} .0217917
+{txt}{space 11}x {c |}{col 14}{res}{space 2} .3257976{col 26}{space 2} .0137231{col 37}{space 1}   23.74{col 46}{space 3}0.000{col 54}{space 4} .2989001{col 67}{space 3}  .352695
+{txt}{space 10}tx {c |}{col 14}{res}{space 2} .0279051{col 26}{space 2} .0195045{col 37}{space 1}    1.43{col 46}{space 3}0.153{col 54}{space 4}-.0103239{col 67}{space 3} .0661342
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .7867887{col 26}{space 2} .0086671{col 37}{space 1}   90.78{col 46}{space 3}0.000{col 54}{space 4} .7698011{col 67}{space 3} .8037763
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. summarize sub if x==1 // No significance can be explained by proportion recieved sub
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 9}sub {c |}{res}     19,762    .1214452    .3266522          0          1
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. reg z t x tx
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    50,000
+{txt}{hline 13}{c +}{hline 34}   F(3, 49996)     = {res}    21.47
+{txt}       Model {c |} {res} 50.5672443         3  16.8557481   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 39247.7768    49,996  .785018338   {txt}R-squared       ={res}    0.0013
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0012
+{txt}       Total {c |} {res} 39298.3441    49,999  .785982601   {txt}Root MSE        =   {res} .88601
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}           z{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2}  .012584{col 26}{space 2} .0101905{col 37}{space 1}    1.23{col 46}{space 3}0.217{col 54}{space 4}-.0073894{col 67}{space 3} .0325574
+{txt}{space 11}x {c |}{col 14}{res}{space 2}-.0640343{col 26}{space 2} .0114055{col 37}{space 1}   -5.61{col 46}{space 3}0.000{col 54}{space 4}-.0863892{col 67}{space 3}-.0416795
+{txt}{space 10}tx {c |}{col 14}{res}{space 2} .0009067{col 26}{space 2} .0162105{col 37}{space 1}    0.06{col 46}{space 3}0.955{col 54}{space 4}-.0308661{col 67}{space 3} .0326795
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0637229{col 26}{space 2} .0072034{col 37}{space 1}    8.85{col 46}{space 3}0.000{col 54}{space 4} .0496042{col 67}{space 3} .0778415
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. gen ly_1 = ly if t==1
+{txt}(25,168 missing values generated)
+
+{com}. gen ly_01 = ly if t==0 & x==1 
+{txt}(39,961 missing values generated)
+
+{com}. egen Ely_01 = mean(ly_01)
+{txt}
+{com}. gen ly_00 = ly if t==0 & x==0 
+{txt}(34,871 missing values generated)
+
+{com}. egen Ely_00 = mean(ly_00)
+{txt}
+{com}. summarize sub if t==0 
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 9}sub {c |}{res}     25,168    .0604736     .238367          0          1
+{txt}
+{com}. gen pr1 = r(mean) if t==1
+{txt}(25,168 missing values generated)
+
+{com}. gen Ely = pr1*Ely_01 + (1-pr1)*Ely_00
+{txt}(25,168 missing values generated)
+
+{com}. gen dly = ly_1 - Ely_00
+{txt}(25,168 missing values generated)
+
+{com}. 
+. gen d_1 = d if t==1
+{txt}(25,168 missing values generated)
+
+{com}. gen d_01 = d if t==0 & x==1
+{txt}(39,961 missing values generated)
+
+{com}. egen Ed_01 = mean(d_01)
+{txt}
+{com}. gen d_00 = d if t==0 & x==0
+{txt}(34,871 missing values generated)
+
+{com}. egen Ed_00 = mean(d_00)
+{txt}
+{com}. gen Ed1 = pr1*Ed_01 + (1-pr1)*Ed_00
+{txt}(25,168 missing values generated)
+
+{com}. gen dd = d_1 - Ed1
+{txt}(25,168 missing values generated)
+
+{com}. replace dd = 0 if t==1 & x==0
+{txt}(15,109 real changes made)
+
+{com}. 
+. reg dd sub
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    24,832
+{txt}{hline 13}{c +}{hline 34}   F(1, 24830)     = {res}  6756.16
+{txt}       Model {c |} {res} 473.956769         1  473.956769   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 1741.86853    24,830  .070151773   {txt}R-squared       ={res}    0.2139
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2139
+{txt}       Total {c |} {res}  2215.8253    24,831  .089236249   {txt}Root MSE        =   {res} .26486
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}          dd{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}sub {c |}{col 14}{res}{space 2} .4441569{col 26}{space 2} .0054036{col 37}{space 1}   82.20{col 46}{space 3}0.000{col 54}{space 4} .4335655{col 67}{space 3} .4547484
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0005305{col 26}{space 2} .0017802{col 37}{space 1}    0.30{col 46}{space 3}0.766{col 54}{space 4}-.0029588{col 67}{space 3} .0040197
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. predict ddpred 
+{txt}(option {bf:xb} assumed; fitted values)
+
+{com}. reg dly ddpred, r 
+
+{txt}Linear regression                               Number of obs     = {res}    24,832
+                                                {txt}F(1, 24830)       =  {res}   269.41
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0115
+                                                {txt}Root MSE          =    {res} 1.0739
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}         dly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}ddpred {c |}{col 14}{res}{space 2} .8390092{col 26}{space 2} .0511161{col 37}{space 1}   16.41{col 46}{space 3}0.000{col 54}{space 4} .7388186{col 67}{space 3} .9391999
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0953637{col 26}{space 2} .0071893{col 37}{space 1}   13.26{col 46}{space 3}0.000{col 54}{space 4} .0812723{col 67}{space 3} .1094551
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. ivregress 2sls dly (dd=sub), r
+{res}
+{txt}{col 1}Instrumental variables (2SLS) regression{col 51}Number of obs{col 67}= {res}    24,832
+{txt}{col 1}{col 51}Wald chi2({res}1{txt}){col 67}= {res}    313.04
+{txt}{col 1}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}{col 1}{col 51}R-squared{col 67}= {res}    0.0798
+{txt}{col 51}Root MSE{col 67}=    {res} 1.0361
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}         dly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}dd {c |}{col 14}{res}{space 2} .8390092{col 26}{space 2} .0474208{col 37}{space 1}   17.69{col 46}{space 3}0.000{col 54}{space 4} .7460661{col 67}{space 3} .9319524
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0953637{col 26}{space 2} .0069753{col 37}{space 1}   13.67{col 46}{space 3}0.000{col 54}{space 4} .0816924{col 67}{space 3} .1090351
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{p 0 15 24}Instrumented:{space 2}dd{p_end}
 {p 0 15 24}Instruments:{space 3}sub{p_end}
 
 {com}. 
