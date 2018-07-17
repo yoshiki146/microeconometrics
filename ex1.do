@@ -54,10 +54,9 @@ psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) ate
 /* psgraph */
 pstest $matchX2, both
 
-/*
+
 bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(50) seed(321): /// 
 psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) ate 
-*/
 
 *** 2-b ***
 psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth($h) common ate
@@ -66,10 +65,8 @@ graph export comsup.png, width(500) replace
 
 pstest $matchX2, both
 
-/*
 bootstrap att=r(att) atu=r(atu) ate=r(ate), reps(50) seed(321): /// 
 psmatch2 $d $matchX2, kernel outcome(y) kerneltype(epan) bwidth(.05) common ate
-*/
 
 *** 2-c ***
 psmatch2 $d $matchX2, outcome(y) ai(1) ate
@@ -128,40 +125,24 @@ gen ate = (attagg + atuagg)/$N
 display ate
 
 *** 3-c *** 
-gen c1 = y/ps2 if $d==1
-gen c2 = y/(1-ps2) if $d==0
-egen c3 = sum(c1) 
-egen c4 = sum(c2)
-gen ATE = (c3-c4)/$N
-display ATE
-
-gen e1 = y/ps2
-egen ATT = mean(e1)
-dis ATT
-
-egen ATTagg = sum(ATTfoo)
-gen ATT = ATTagg/$N
-gen ATNT = 
-gen ATT = ATTavg/pr
-
-gen ATNT_i = y/psC
-egen ATNTagg= sum(ATNT_i)
-egen ATNTavg = mean(ATNT_i)
-gen ATNT = ATNTavg/(1-pr)
-gen ATE= (ATTagg - ATNTagg)/$N
-
-
-/*
+// ATE
 gen ypred3t = y/ps if $d==1  // counterfactual if treated? See Eq20
 gen ypred3c = y/(1-ps) if $d==0 // CF if untreated?
 egen ypred3tsum = sum(ypred3t)
 egen ypred3csum= sum(ypred3c)
-
-
-gen ate33 = (sum(ypred3t) - sum(ypred3c)) / $N
-display ate33
-*/
-
-
+gen ate3c = (ypred3tsum - ypred3csum)/$N
+display ate3c
+//ATT 
+gen d_ps = $d - ps2
+gen d_ps_y = d_ps*y
+egen p_d1 = mean($d)
+gen d_ps0 = 1-ps
+gen p_d_ps0 = p_d1/d_ps0
+summarize p_d_ps0
+gen att3c = r(mean)
+display att3c
+//ATNT
+gen atnt3c = (ate3c*$N - att3c*nrT)/nrC
+display atnt3c
 *********************************************
 log close

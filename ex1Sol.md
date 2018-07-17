@@ -1,5 +1,5 @@
 
-### Problem 1
+###Problem 1
 > 1) Use the procedure pscore written by Becker and Ichino (2002) for Stata1 to check whether the balancing property is satisfied for the model in which `y = $d*ln(y1)+(1- $d)*ln(y0)` as outcome variable and  
 
 > > a) x and theta are taken as matching variables without including any interactions
@@ -7,14 +7,12 @@ between these variables or higher order terms
 b) x and theta are taken as matching variables including theta squared, and the
 interaction between x and theta.  
 
-In this question, we estimate the propensity score of the treatment on the control variable. In the first step, `pscore` splits the observation into eight blocks so that the mean of propensity score in each clock balances between treatment group and control group. We then test the balancing property of matching variables. Null hypothesis is no difference in covariate means between group. Note that the test is performed for each variable of every block. We therefore run 16 separate tests in question a and 32 in question b. If all tests fail to reject the null hypothesis, we can say that the balancing property is satisfied.  
+In this question, we estimate the propensity score of the treatment on the control variable. In the first step, `pscore` splits the observation into eight blocks so that the mean of propensity score in each block balances between treatment group and control group. We then test the balancing property of matching variables. Null hypothesis is no difference in covariate means between group. Note that the test is performed for each variable of every block. We therefore run 16 separate tests in question a and 32 in question b. If all tests fail to reject the null hypothesis, we can say that the balancing property is satisfied.  
 
 a) Balancing property is not satisfied because the x in block 8 is not balanced.  
 
 b) Balancing propety is satisfied. The final number of blocks is 8.
 
-
-\pagebreak
 
 ### Problem 2   
 > 2) Use psmatch2 (of Leuven and Sianesi) to  
@@ -58,14 +56,18 @@ contrasts to the findings in 1.b). How do you explain this contrast?
 The propensity score is not balanced between treatment and control group, i.e. the assignment into treatment and control is not full random after conditioning to x, theta, theta square and x-theta interaction.  
 This can be confirmed by the likelihood-ratio test result which we can find in the last line of `pstest` output. Third column of the output shows the p-values of the likelihood-ratio test of the joint insignificance of all the regressors (0.020), which is below the threshold of 0.05. This contracts to the balancing of the propensity score in Problem1-b.  
 
-
-This is because of the use of different matching method. Concretely, the method used in `pscore` (Prob1) is blocking method and `pstest` (Prob2) implements kernel maching. Blocking method requires the propensity score to be matched within each block by dividing a block into small blocks until the propensity score is balanced. Therefore, the balancing of propensity score is automatically satisfied under the algorithm within each block. On the other hand, kernel matching, since it does not divide observations into strata, checks for the balancing of overall  propensity score between treated and control. Hence the joint likelihood-ratio test of `pstest` is more likely to reject the hypothesis of propensity score matching.  
-
-![Common Support](https://github.com/yoshiki146/microeconometrics/blob/master/comsup.png "commonSupport")
+This is because of the difference in testing method. `pscore` is based on t-test where null hypothesis is no difference in each covariate, while `psmatch2` is based on likelihood ratio test.  
 
 
 >  f) Imposing a common support in 2.b) hardly changes the results. This seems to suggest that common support is not really an issue. However, if you analyze the density functions of the propensity score by treatment group (which you can do by the command `psgraph`) there are nevertheless reasons for concern. Explain this. Also mention for which estimator is the concern more important: ATT or ATNT? Why?
 
+The density function of propensity score is shown as below.  
+![Common Support](https://github.com/yoshiki146/microeconometrics/blob/master/comsup.png "commonSupport")  
+
+Where propensity score is close to zero, we have not-small number of observations to be matched in the treated group, but control group only have few observations to be matched near 1. This lack of matching observations possibly deteriorates the estimation of ATNT when the extreme exists
+
+> g) Compare the ATT, ATNT and ATE of a), b) and d). Discuss the potential sources of the observed differences. Use in this discussion the fact that the true ATT=0.471 and the
+ATNT=0.315 (see Blundell and Costa Dias (2009), Table 3).
 ATT, ATNT and ATE in questions a, b and d are summarised as follows. True ATT and ATNT are 0.471 and 0.315.  
 
 |   | ATT  | ATNT | ATE  |
@@ -75,13 +77,8 @@ ATT, ATNT and ATE in questions a, b and d are summarised as follows. True ATT an
 | d | .546 | .391 | .445 |
 
 For all estimations, we can say that the estimation is not close to the true values. This stems from the wrong specification of the model, i.e. redundant matching variables of $theta^2$ and $x*theta$.
-There is little difference in ATT between a and b, but small difference in ATNT. This is because of the number of off-support observations; 80 obs in control and 1 in treated. It is noted that the excluding off-support observations leads to estimation further from the true value.  
-The difference is relatively large between d and a or b and closer to the true value. Blocking method seems to be a better choice than Epanechnikov kernel method in this specific case.  
+There is little difference in ATT between a and b. We see small difference in ATNT, but still negligible. It is noted that the excluding off-support observations in fact leads to estimation further from the true value here. The difference is relatively large between d and a or b and closer to the true value. Blocking method seems to be a better choice than Epanechnikov kernel method in this specific case.  
 
-
-
-
-\pagebreak
 
 ### Problem 3  
 
@@ -102,4 +99,15 @@ The estimated ATNT is .369
 * ATE  
 ATE is the weighted average of ATT and ATNT. ATE = .583*697 + .369*1303 = .444.  
 
-> c) Estimate ATE, ATT and ATNT using the re-weighting estimation procedure. Use the same specification of the propensity score as in Question 1.b).   
+> c) Estimate ATE, ATT and ATNT using the re-weighting estimation procedure. Use the same specification of the propensity score as in Question 1.b).  
+
+Recall that ATE is estimated as:  
+$$ \hat{ATE} = \frac{1}{N} \left \{\sum_{i|d_{i}=1} \frac{y_{i}^{1}}{p\left(x_{i} \right)} - \sum_{j|d_{j}=0} \frac{y_{j}^{0}}{1-p\left(x_{j}\right)} \right\} $$
+where $P(x_i)$ is the propensity score estimated in 1-b (`ps2`), i is the observation in treatment group and j in control.  
+We get ATE of .485  
+ATT estimator is:
+$$
+ATT=E\left\{\frac{[d-p(x)]y}{P(d=1)[1-p(x)]}\right\}
+$$
+Therefore we get .797.
+Since we know that ATE is the weighted average of ATT and ATNT, we can recover ATNT to get .473.
