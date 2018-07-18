@@ -752,4 +752,8 @@ end of do-file
 {com}. 
 {txt}end of do-file
 
-{com}. 
+{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
+{txt}
+{com}. capture log close
+{smcl}
+{com}{sf}{ul off}

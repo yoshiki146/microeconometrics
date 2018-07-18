@@ -38,9 +38,9 @@ reg ly t if x==1 & sub==0, robust
 
 ** 3-2
 
-summarize d_uS if t==0 & sub==1 & x==1
+summarize d if t==0 & sub==1 & x==1
 gen p10 = r(mean)
-summarize d_uS if t==1 & sub==1 & x==1
+summarize d if t==1 & sub==1 & x==1
 gen p11 = r(mean)
 
 
@@ -135,7 +135,7 @@ ivregress 2sls dlyp (ddp=sub), r
 
 ** 5-3
 gen expy = exp(ly)
-
+reg ly t sub tsub if x==1,r 
 reg expy t sub tsub if x==1, r
 reg expy t sub tsub if x==0, r
 
