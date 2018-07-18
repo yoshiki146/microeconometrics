@@ -1,7 +1,7 @@
 capture log close
-log using "~/Documents/GitHub/microeconometrics/ex2.smcl", replace
+log using "~/Documents/GitHub/microeconometrics/ex2/ex2.smcl", replace
 
-use "~/Documents/GitHub/microeconometrics/assignment_DiD1.dta", clear
+use "~/Documents/GitHub/microeconometrics/ex2/assignment_DiD1.dta", clear
 
 
 *******************

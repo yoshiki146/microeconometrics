@@ -1,9 +1,9 @@
 {smcl}
 {com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
+       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1/ex1.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}18 Jul 2018, 03:34:06
+ {txt}opened on:  {res}18 Jul 2018, 17:25:19
 {txt}
 {com}. 
 . 
@@ -26,7 +26,7 @@
 . 
 . *** 1-a ***
 . 
-. use "~/Documents/GitHub/microeconometrics/dataBlun_noc.dta", clear
+. use "~/Documents/GitHub/microeconometrics/ex1/dataBlun_noc.dta", clear
 {txt}
 {com}. 
 . global N=_N        /* Number of observations */ 
@@ -733,9 +733,9 @@ assignment {c |} On suppor {c |}     Total
 {com}. *********************************************
 . log close
       {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1.smcl
+       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex1/ex1.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}18 Jul 2018, 03:38:41
+ {txt}closed on:  {res}18 Jul 2018, 17:29:30
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

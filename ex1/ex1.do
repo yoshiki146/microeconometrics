@@ -1,5 +1,5 @@
 capture log close
-log using "~/Documents/GitHub/microeconometrics/ex1.smcl", replace
+log using "~/Documents/GitHub/microeconometrics/ex1/ex1.smcl", replace
 
 
 *******************************
@@ -21,7 +21,7 @@ ssc install psmatch2
 
 *** 1-a ***
 
-use "~/Documents/GitHub/microeconometrics/dataBlun_noc.dta", clear
+use "~/Documents/GitHub/microeconometrics/ex1/dataBlun_noc.dta", clear
 
 global N=_N        /* Number of observations */ 
 global h = 0.05      /* bandwidth */

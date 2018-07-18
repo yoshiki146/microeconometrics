@@ -1,12 +1,12 @@
 {smcl}
 {com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex2.smcl
+       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex2/ex2.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}17 Jul 2018, 22:21:33
+ {txt}opened on:  {res}18 Jul 2018, 17:24:20
 {txt}
 {com}. 
-. use "~/Documents/GitHub/microeconometrics/assignment_DiD1.dta", clear
+. use "~/Documents/GitHub/microeconometrics/ex2/assignment_DiD1.dta", clear
 {txt}
 {com}. 
 . 
@@ -221,8 +221,8 @@
 {space 10}dd {c |}{col 14}{res}{space 2} .5129168{col 26}{space 2}  .081416{col 37}{space 1}    6.30{col 46}{space 3}0.000{col 54}{space 4} .3533444{col 67}{space 3} .6724892
 {txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.0087832{col 26}{space 2} .0112735{col 37}{space 1}   -0.78{col 46}{space 3}0.436{col 54}{space 4}-.0308789{col 67}{space 3} .0133124
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{p 0 15 24}Instrumented:{space 2}dd{p_end}
-{p 0 15 24}Instruments:{space 3}sub{p_end}
+{p 0 15 25}Instrumented:{space 2}dd{p_end}
+{p 0 15 25}Instruments:{space 3}sub{p_end}
 
 {com}. 
 . 
@@ -400,15 +400,32 @@
 {space 9}ddp {c |}{col 14}{res}{space 2} .4765374{col 26}{space 2} .3205295{col 37}{space 1}    1.49{col 46}{space 3}0.137{col 54}{space 4}-.1516889{col 67}{space 3} 1.104764
 {txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.0052812{col 26}{space 2} .0088895{col 37}{space 1}   -0.59{col 46}{space 3}0.552{col 54}{space 4}-.0227044{col 67}{space 3} .0121419
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{p 0 15 24}Instrumented:{space 2}ddp{p_end}
-{p 0 15 24}Instruments:{space 3}sub{p_end}
+{p 0 15 25}Instrumented:{space 2}ddp{p_end}
+{p 0 15 25}Instruments:{space 3}sub{p_end}
 
 {com}. 
 . ** 5-3
 . gen expy = exp(ly)
 {txt}
-{com}. 
-. reg expy t sub tsub if x==1, r
+{com}. reg ly t sub tsub if x==1,r 
+
+{txt}Linear regression                               Number of obs     = {res}    19,762
+                                                {txt}F(3, 19758)       =  {res}    12.93
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0020
+                                                {txt}Root MSE          =    {res} 1.0729
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}          ly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 11}t {c |}{col 14}{res}{space 2}-.0087833{col 26}{space 2} .0157474{col 37}{space 1}   -0.56{col 46}{space 3}0.577{col 54}{space 4}-.0396496{col 67}{space 3}  .022083
+{txt}{space 9}sub {c |}{col 14}{res}{space 2} .0795828{col 26}{space 2} .0459049{col 37}{space 1}    1.73{col 46}{space 3}0.083{col 54}{space 4}-.0103947{col 67}{space 3} .1695602
+{txt}{space 8}tsub {c |}{col 14}{res}{space 2} .1890406{col 26}{space 2} .0642405{col 37}{space 1}    2.94{col 46}{space 3}0.003{col 54}{space 4} .0631239{col 67}{space 3} .3149573
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.107719{col 26}{space 2} .0109938{col 37}{space 1}  100.76{col 46}{space 3}0.000{col 54}{space 4}  1.08617{col 67}{space 3} 1.129268
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. reg expy t sub tsub if x==1, r
 
 {txt}Linear regression                               Number of obs     = {res}    19,762
                                                 {txt}F(3, 19758)       =  {res}     6.09
@@ -445,92 +462,12 @@
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg y t sub ysun if x==1,r 
-{bf}{err}y{sf} ambiguous abbreviation
-{txt}{search r(111), local:r(111);}
-
-end of do-file
-
-{search r(111), local:r(111);}
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg ly t sub ysun if x==1,r 
-{err}variable {bf}ysun{sf} not found
-{txt}{search r(111), local:r(111);}
-
-end of do-file
-
-{search r(111), local:r(111);}
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg ly t sub ysub if x==1,r 
-{err}variable {bf}ysub{sf} not found
-{txt}{search r(111), local:r(111);}
-
-end of do-file
-
-{search r(111), local:r(111);}
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg ly t sub tsub if x==1,r 
-
-{txt}Linear regression                               Number of obs     = {res}    19,762
-                                                {txt}F(3, 19758)       =  {res}    12.93
-                                                {txt}Prob > F          = {res}    0.0000
-                                                {txt}R-squared         = {res}    0.0020
-                                                {txt}Root MSE          =    {res} 1.0729
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}          ly{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 11}t {c |}{col 14}{res}{space 2}-.0087833{col 26}{space 2} .0157474{col 37}{space 1}   -0.56{col 46}{space 3}0.577{col 54}{space 4}-.0396496{col 67}{space 3}  .022083
-{txt}{space 9}sub {c |}{col 14}{res}{space 2} .0795828{col 26}{space 2} .0459049{col 37}{space 1}    1.73{col 46}{space 3}0.083{col 54}{space 4}-.0103947{col 67}{space 3} .1695602
-{txt}{space 8}tsub {c |}{col 14}{res}{space 2} .1890406{col 26}{space 2} .0642405{col 37}{space 1}    2.94{col 46}{space 3}0.003{col 54}{space 4} .0631239{col 67}{space 3} .3149573
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.107719{col 26}{space 2} .0109938{col 37}{space 1}  100.76{col 46}{space 3}0.000{col 54}{space 4}  1.08617{col 67}{space 3} 1.129268
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg expy t sub tsub if x==1, r
-
-{txt}Linear regression                               Number of obs     = {res}    19,762
-                                                {txt}F(3, 19758)       =  {res}     6.09
-                                                {txt}Prob > F          = {res}    0.0004
-                                                {txt}R-squared         = {res}    0.0014
-                                                {txt}Root MSE          =    {res} 8.2376
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}        expy{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 11}t {c |}{col 14}{res}{space 2} .0635401{col 26}{space 2} .1199023{col 37}{space 1}    0.53{col 46}{space 3}0.596{col 54}{space 4}-.1714785{col 67}{space 3} .2985588
-{txt}{space 9}sub {c |}{col 14}{res}{space 2} .5730242{col 26}{space 2} .3393583{col 37}{space 1}    1.69{col 46}{space 3}0.091{col 54}{space 4}-.0921465{col 67}{space 3} 1.238195
-{txt}{space 8}tsub {c |}{col 14}{res}{space 2} 1.111479{col 26}{space 2} .5556907{col 37}{space 1}    2.00{col 46}{space 3}0.045{col 54}{space 4} .0222787{col 67}{space 3}  2.20068
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.386959{col 26}{space 2} .0794463{col 37}{space 1}   67.81{col 46}{space 3}0.000{col 54}{space 4} 5.231238{col 67}{space 3} 5.542681
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-{txt}end of do-file
-
-{com}. 
 . 
+. *******************
+. **** Part2 ********
+. ******************
 . 
-. 
-. 
-. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. use "~/Documents/GitHub/microeconometrics/assignment_DiD2.dta", clear
+. use "~/Documents/GitHub/microeconometrics/ex2/assignment_DiD2.dta", clear
 {txt}
 {com}. 
 . 
@@ -558,11 +495,8 @@ end of do-file
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg z t sub tsub if x==1, r
+. ** 6-2
+. reg z t sub tsub if x==1, r
 
 {txt}Linear regression                               Number of obs     = {res}    19,762
                                                 {txt}F(3, 19758)       =  {res}   208.32
@@ -581,11 +515,11 @@ end of do-file
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. gen tx = t*x
+. 
+. *** Q7 *** 
+. 
+. ** 7-1
+. gen tx = t*x
 {txt}
 {com}. reg ly t x tx
 
@@ -606,22 +540,15 @@ end of do-file
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. summarize sub if x==1 // No significance can be explained by proportion recieved sub
+. summarize sub if x==1 // No significance can be explained by proportion recieved sub
 
 {txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
 {hline 13}{c +}{hline 57}
 {space 9}sub {c |}{res}     19,762    .1214452    .3266522          0          1
 {txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. reg z t x tx
+. ** 7-2
+. reg z t x tx
 
 {txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    50,000
 {txt}{hline 13}{c +}{hline 34}   F(3, 49996)     = {res}    21.47
@@ -640,11 +567,9 @@ end of do-file
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. gen ly_1 = ly if t==1
+. ** 7-3
+. ** replace sub with x and remove x==1 restriction from 3.3
+. gen ly_1 = ly if t==1
 {txt}(25,168 missing values generated)
 
 {com}. gen ly_01 = ly if t==0 & x==1 
@@ -746,14 +671,17 @@ end of do-file
 {space 10}dd {c |}{col 14}{res}{space 2} .8390092{col 26}{space 2} .0474208{col 37}{space 1}   17.69{col 46}{space 3}0.000{col 54}{space 4} .7460661{col 67}{space 3} .9319524
 {txt}{space 7}_cons {c |}{col 14}{res}{space 2} .0953637{col 26}{space 2} .0069753{col 37}{space 1}   13.67{col 46}{space 3}0.000{col 54}{space 4} .0816924{col 67}{space 3} .1090351
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{p 0 15 24}Instrumented:{space 2}dd{p_end}
-{p 0 15 24}Instruments:{space 3}sub{p_end}
+{p 0 15 25}Instrumented:{space 2}dd{p_end}
+{p 0 15 25}Instruments:{space 3}sub{p_end}
 
 {com}. 
-{txt}end of do-file
-
-{com}. do "/var/folders/g9/ny0mk9fn6_71rdqwld__d77r0000gn/T//SD43875.000000"
-{txt}
-{com}. capture log close
+. 
+. ************************************
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/yoshikinakajima/Documents/GitHub/microeconometrics/ex2/ex2.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}18 Jul 2018, 17:24:23
+{txt}{.-}
 {smcl}
-{com}{sf}{ul off}
+{txt}{sf}{ul off}
