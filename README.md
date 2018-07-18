@@ -1,1 +1,6 @@
-# microeconometrics
+### Causal Inference in Microeconometrics with Applications to Programme Evaluation.   
+
+
+Intensive lecture by Prof. Bart Cockx from Ghent University focusing on microeconometric methods for causal inference. Course covers four main topics; Matching, Difference in Differences, Instrumental Variable and Regression Discontinuity Design.  
+
+This repository contains solutions to the computer assignments, ex1 for matching and ex2 for DID. Since Stata was used throughout the lecture, Stata do-files give the complete solution to the problems. `smcl` file is a log-file of stata, hence contains the output from corresponding do-file. Interpretations are given in markdown, rmarkdown and pdf files. My original intention was to use markdown, but because of my unfamiliarity to GitHub markdown, formats are broken such as math equation. Instead rmarkdown and corresponding pdf files report the findings and interpretations of the computer exercises. R files to capacitate understanding and expected to cover more parts of questions in the future.  
