@@ -144,7 +144,7 @@ reg expy t sub tsub if x==0, r
 **** Part2 ********
 ******************
 
-use "~/Documents/GitHub/microeconometrics/assignment_DiD2.dta", clear
+use "~/Documents/GitHub/microeconometrics/ex2/assignment_DiD2.dta", clear
 
 
 *** Q6 ***
